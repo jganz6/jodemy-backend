@@ -1,5 +1,5 @@
-const dbMySql = require("../database/dbMySql");
-const getUsersWithRole = () => {
+const dbMySql = require("../databases/dbMySql");
+const getUsers = () => {
   return new Promise((resolve, reject) => {
     const qs = `SELECT * FROM tb_account`;
     dbMySql.query(qs, (err, result) => {
@@ -12,5 +12,5 @@ const getUsersWithRole = () => {
   });
 };
 module.exports = {
-  getUsersWithRole,
+  getUsers,
 };

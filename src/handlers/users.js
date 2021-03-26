@@ -2,9 +2,9 @@ const usersModel = require("../models/users");
 
 const { writeResponse, writeError } = require("../helpers/response");
 
-const getUsersWithRole = (req, res) => {
+const getUsers = (req, res) => {
   usersModel
-    .getUsersWithRole()
+    .getUsers()
     .then((result) => {
       const headers = {
         "Access-Control-Allow-Origin": "http://localhost:3000",
@@ -27,5 +27,5 @@ const getUsersWithRole = (req, res) => {
 };
 
 module.exports = {
-  getUsersWithRole,
+  getUsers,
 };
