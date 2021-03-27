@@ -32,7 +32,20 @@ const postResetPassword = (qsValue) => {
     });
   });
 };
+const postRegister = (qsValue) => {
+  return new Promise((resolve, reject) => {
+    const qs = `INSERT INTO tb_account (email_account, password_account, username_account) VALUES(? , ? , ?)`;
+    dbMySql.query(qs, qsValue, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve("berhasil");
+      }
+    });
+  });
+};
 module.exports = {
   postResetPassword,
   postValidation,
+  postRegister,
 };
