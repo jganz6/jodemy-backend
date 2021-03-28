@@ -1,7 +1,7 @@
 const dbMySql = require("../databases/dbMySql");
 const postValidation = (qsValue) => {
   return new Promise((resolve, reject) => {
-    const qs = `SELECT id_account,role_account,password_account FROM tb_account WHERE email_account=?`;
+    const qs = `SELECT id_account,role,password FROM tb_account WHERE email=?`;
     dbMySql.query(qs, qsValue, (err, result) => {
       if (err) {
         reject(err);
@@ -10,8 +10,8 @@ const postValidation = (qsValue) => {
       } else {
         resolve(
           (result = {
-            id: `${result[0].id_account}`,
-            password: `${result[0].password_account}`,
+            id: `${result[0].id}`,
+            password: `${result[0].password}`,
           })
         );
       }
@@ -20,7 +20,7 @@ const postValidation = (qsValue) => {
 };
 const postResetPassword = (qsValue) => {
   return new Promise((resolve, reject) => {
-    const qs = `UPDATE tb_account SET password_account = ? WHERE id_account = ?`;
+    const qs = `UPDATE tb_account SET password = ? WHERE id_account = ?`;
     dbMySql.query(qs, qsValue, (err, result) => {
       if (err) {
         reject(err);
@@ -34,7 +34,7 @@ const postResetPassword = (qsValue) => {
 };
 const postRegister = (qsValue) => {
   return new Promise((resolve, reject) => {
-    const qs = `INSERT INTO tb_account (email_account, password_account, username_account) VALUES(? , ? , ?)`;
+    const qs = `INSERT INTO tb_account (email, password, username) VALUES(? , ? , ?)`;
     dbMySql.query(qs, qsValue, (err) => {
       if (err) {
         reject(err);
