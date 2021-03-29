@@ -13,4 +13,8 @@ Router.post("/createClass", classHandler.createClass);
 Router.post("/createSubjectClass", classHandler.createClass);
 Router.delete("/deleteClass/:id_class", classHandler.deleteClass);
 Router.delete("/deleteSubjectClass/:id_class", classHandler.deleteSubjectClass);
+Router.post(
+  "/updateSubReport/:id_class.:id_subject",
+  classHandler.updateSubReport
+);
 module.exports = Router;

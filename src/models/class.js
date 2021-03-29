@@ -30,7 +30,8 @@ const createClass = (qsValue) => {
 };
 const getMyClass = (qsValue) => {
   return new Promise((resolve, reject) => {
-    const qs = `SELECT DISTINCT(score_subject_report.id_class), class.class_name,class.category, class.level, class.description, class.pricing, class.schedule, class.start_time, class.end_time FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class WHERE score_subject_report.id_account = ?`;
+    // const qs = `SELECT DISTINCT(score_subject_report.id_class), class.class_name,class.category, class.level, class.description, class.pricing, class.schedule, class.start_time, class.end_time FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class WHERE score_subject_report.id_account = ?`;
+    const qs = `SELECT class.*, AVG(score_subject_report.score) AS SCORE FROM score_subject_report INNER JOIN class on class.id_class=score_subject_report.id_class WHERE id_account= ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_class) FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on class.id_class = class_subject.id_class where score_subject_report.id_account = ? GROUP BY id_class) GROUP BY class.id_class`;
     dbMySql.query(qs, qsValue, (err, result) => {
       if (err) {
         reject(err);
@@ -103,23 +104,44 @@ const getMemberSubjectClass = (qsValue) => {
       } else if (result.length === 0) {
         reject("======");
       } else {
-        resolve((result = result[0]));
+        resolve(result);
       }
     });
   });
 };
-const updateSubReport = (qsValue) => {
+const getMemberId = (qsValue) => {
   return new Promise((resolve, reject) => {
-    const qs = `INSERT INTO score_subject_report (id_account, id_class, id_subject) VALUES ()`;
+    const qs = `SELECT DISTINCT(score_subject_report.id_account), tb_account.username FROM score_subject_report inner JOIN tb_account ON score_subject_report.id_account = tb_account.id_account WHERE score_subject_report.id_class = ?`;
     dbMySql.query(qs, qsValue, (err, result) => {
       if (err) {
+        // throw err;
         reject(err);
       } else if (result.length === 0) {
         reject("======");
       } else {
-        resolve((result = result[0]));
+        resolve(
+          (jodie = result.map((o) => {
+            return o.id_account;
+          }))
+        );
       }
     });
+  });
+};
+const updateSubReport = (qsValue, id_member) => {
+  const qs = `INSERT INTO score_subject_report (id_account, id_class, id_subject) VALUES ( ?, ?, ?)`;
+  return new Promise((resolve, reject) => {
+    id_member.map((o) => {
+      console.log(o);
+      qsValueFull = [o.toString(), ...qsValue];
+      console.log(qsValueFull);
+      dbMySql.query(qs, qsValueFull, (err) => {
+        if (err) {
+          reject("error");
+        }
+      });
+    });
+    resolve("berhasil update");
   });
 };
 const deleteClass = (qsValue) => {
@@ -157,4 +179,6 @@ module.exports = {
   getMemberSubjectClass,
   deleteClass,
   deleteSubjectClass,
+  updateSubReport,
+  getMemberId,
 };

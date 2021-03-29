@@ -114,6 +114,19 @@ const deleteSubjectClass = async (req, res) => {
     res.status(400).send("err");
   }
 };
+const updateSubReport = async (req, res) => {
+  const { id_class, id_subject } = req.params;
+  try {
+    const result = await classModel.getMemberId(id_class);
+    const resultFINAL = await classModel.updateSubReport(
+      [id_class, id_subject],
+      result
+    );
+    res.status(200).send(resultFINAL);
+  } catch (error) {
+    res.status(400).send("err");
+  }
+};
 module.exports = {
   getAllClass,
   createClass,
@@ -125,4 +138,5 @@ module.exports = {
   getMemberSubjectClass,
   deleteClass,
   deleteSubjectClass,
+  updateSubReport,
 };
