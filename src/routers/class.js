@@ -17,4 +17,7 @@ Router.post(
   "/updateSubReport/:id_class.:id_subject",
   classHandler.updateSubReport
 );
+Router.patch("/updateClass", classHandler.updateClass);
+Router.patch("/updateSubjectClass", classHandler.updateSubjectClass);
+Router.patch("/updateScore", classHandler.updateScore);
 module.exports = Router;

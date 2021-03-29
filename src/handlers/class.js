@@ -2,7 +2,7 @@ const classModel = require("../models/class");
 
 const getAllClass = async (req, res) => {
   try {
-    const result = await classModel.getAllCLass();
+    const result = await classModel.getAllClass();
     res.status(200).send(result);
   } catch (error) {
     res.status(400).send("err");
@@ -127,6 +127,36 @@ const updateSubReport = async (req, res) => {
     res.status(400).send("err");
   }
 };
+const updateClass = async (req, res) => {
+  const updateValue = req.body;
+  try {
+    const result = await authModel.updateClass([updateValue, ...req.query.id]);
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(400).send("err");
+  }
+};
+const updateSubjectClass = async (req, res) => {
+  const updateValue = req.body;
+  try {
+    const result = await authModel.updateSubjectClass([
+      updateValue,
+      ...req.query.id,
+    ]);
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(400).send("err");
+  }
+};
+const updateScore = async (req, res) => {
+  const { score } = req.body;
+  try {
+    const result = await authModel.updateScore([score, req.query.id]);
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(400).send("err");
+  }
+};
 module.exports = {
   getAllClass,
   createClass,
@@ -139,4 +169,7 @@ module.exports = {
   deleteClass,
   deleteSubjectClass,
   updateSubReport,
+  updateSubjectClass,
+  updateClass,
+  updateScore,
 };

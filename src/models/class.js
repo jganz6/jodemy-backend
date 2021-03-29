@@ -1,6 +1,6 @@
 const dbMySql = require("../databases/dbMySql");
 
-const getAllCLass = (qsValue) => {
+const getAllClass = (qsValue) => {
   return new Promise((resolve, reject) => {
     const qs = `SELECT * FROM class`;
     dbMySql.query(qs, (err, result) => {
@@ -180,8 +180,44 @@ const deleteSubjectClass = (qsValue) => {
     });
   });
 };
+const updateClass = (qsValue) => {
+  return new Promise((resolve, reject) => {
+    const qs = `UPDATE class SET ? WHERE id_class=?`;
+    dbMySql.query(qs, qsValue, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve("berhasil");
+      }
+    });
+  });
+};
+const updateSubjectClass = (qsValue) => {
+  return new Promise((resolve, reject) => {
+    const qs = `UPDATE class_subject SET ? WHERE id_class=?`;
+    dbMySql.query(qs, qsValue, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve("berhasil");
+      }
+    });
+  });
+};
+const updateScore = (qsValue) => {
+  return new Promise((resolve, reject) => {
+    const qs = `UPDATE score_subject_report SET score = ? WHERE id_subject = ?`;
+    dbMySql.query(qs, qsValue, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve("berhasil");
+      }
+    });
+  });
+};
 module.exports = {
-  getAllCLass,
+  getAllClass,
   createClass,
   getMyClass,
   getNewClass,
@@ -194,4 +230,7 @@ module.exports = {
   updateSubReport,
   getMemberId,
   getAllClassAndStudent,
+  updateSubjectClass,
+  updateClass,
+  updateScore,
 };

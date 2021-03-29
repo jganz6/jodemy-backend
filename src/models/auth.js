@@ -44,8 +44,34 @@ const postRegister = (qsValue) => {
     });
   });
 };
+const updateAccount = (qsValue) => {
+  return new Promise((resolve, reject) => {
+    const qs = `UPDATE tb_account SET ? WHERE id_account=?`;
+    dbMySql.query(qs, qsValue, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve("berhasil");
+      }
+    });
+  });
+};
+const deleteAccount = (qsValue) => {
+  return new Promise((resolve, reject) => {
+    const qs = `DELETE tb_account WHERE id_account=?`;
+    dbMySql.query(qs, qsValue, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve("Successful DELETE!");
+      }
+    });
+  });
+};
 module.exports = {
   postResetPassword,
   postValidation,
   postRegister,
+  updateAccount,
+  deleteAccount,
 };

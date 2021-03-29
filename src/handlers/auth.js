@@ -53,9 +53,31 @@ const postRegister = async (req, res) => {
     writeResponse(res, headers, 200, result);
   }
 };
+const updateAccount = async (req, res) => {
+  const updateValue = req.body;
+  try {
+    const result = await authModel.updateAccount([
+      updateValue,
+      ...req.query.id,
+    ]);
+    res.status(200).send(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+const deleteAccount = async (req, res) => {
+  try {
+    const result = await authModel.deleteAccount(req.query.id);
+    res.status(200).send(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
 
 module.exports = {
   postLogin,
   postResetPassword,
   postRegister,
+  updateAccount,
+  deleteAccount,
 };
