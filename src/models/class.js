@@ -28,6 +28,18 @@ const createClass = (qsValue) => {
     });
   });
 };
+const getAllClassAndStudent = (qsValue) => {
+  return new Promise((resolve, reject) => {
+    const qs = `SELECT class.*, COUNT(DISTINCT(score_subject_report.id_account)) AS Student FROM score_subject_report INNER JOIN class on class.id_class=score_subject_report.id_class WHERE score_subject_report.id_class in(SELECT DISTINCT(id_class) FROM score_subject_report) GROUP by class.id_class`;
+    dbMySql.query(qs, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};
 const getMyClass = (qsValue) => {
   return new Promise((resolve, reject) => {
     // const qs = `SELECT DISTINCT(score_subject_report.id_class), class.class_name,class.category, class.level, class.description, class.pricing, class.schedule, class.start_time, class.end_time FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class WHERE score_subject_report.id_account = ?`;
@@ -181,4 +193,5 @@ module.exports = {
   deleteSubjectClass,
   updateSubReport,
   getMemberId,
+  getAllClassAndStudent,
 };
