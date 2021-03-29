@@ -8,6 +8,14 @@ const getAllClass = async (req, res) => {
     res.status(400).send("err");
   }
 };
+const getAllClassAndStudent = async (req, res) => {
+  try {
+    const result = await classModel.getAllClassAndStudent();
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(400).send("err");
+  }
+};
 const getMyClass = async (req, res) => {
   const { id_account } = req.params;
   try {
@@ -159,6 +167,7 @@ const updateScore = async (req, res) => {
 };
 module.exports = {
   getAllClass,
+  getAllClassAndStudent,
   createClass,
   getMyClass,
   getNewClass,
