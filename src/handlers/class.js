@@ -1,8 +1,23 @@
 const classModel = require("../models/class");
+const { searchValue } = require("./../helpers/searchValue");
+const { sortBy } = require("./../helpers/sortBy");
 
 const getAllClass = async (req, res) => {
   try {
     const result = await classModel.getAllClass();
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(400).send("err");
+  }
+};
+const registerClass = async (req, res) => {
+  console.log(req.query.id_class);
+  try {
+    const result = await classModel.registerClass([
+      req.query.id_account,
+      req.query.id_class,
+      req.query.id_class,
+    ]);
     res.status(200).send(result);
   } catch (error) {
     res.status(400).send("err");
@@ -18,8 +33,10 @@ const getAllClassAndStudent = async (req, res) => {
 };
 const getMyClass = async (req, res) => {
   const { id_account } = req.params;
+  const { search, sort } = req.query;
+  const qsValue = [searchValue(search), id_account, ...sortBy(sort)];
   try {
-    const result = await classModel.getMyClass(id_account);
+    const result = await classModel.getMyClass(qsValue);
     res.status(200).send(result);
   } catch (error) {
     res.status(400).send("err");
@@ -27,8 +44,10 @@ const getMyClass = async (req, res) => {
 };
 const getNewClass = async (req, res) => {
   const { id_account } = req.params;
+  const { search, sort } = req.query;
+  const qsValue = [searchValue(search), id_account, ...sortBy(sort)];
   try {
-    const result = await classModel.getNewClass(id_account);
+    const result = await classModel.getNewClass(qsValue);
     res.status(200).send(result);
   } catch (error) {
     res.status(400).send("err");
@@ -181,4 +200,5 @@ module.exports = {
   updateSubjectClass,
   updateClass,
   updateScore,
+  registerClass,
 };

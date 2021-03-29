@@ -6,6 +6,7 @@ Router.get("/getAllClassAndStudent", classHandler.getAllClassAndStudent);
 Router.get("/getNewClass/:id_account", classHandler.getNewClass);
 Router.get("/getSubjectClass/:id_account", classHandler.getSubjectClass);
 Router.get("/getMemberClass/:id_class", classHandler.getMemberClass);
+Router.post("/registerClass", classHandler.registerClass);
 Router.get(
   "/getMemberSubjectClass/:id_account.:id_class",
   classHandler.getMemberSubjectClass

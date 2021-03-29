@@ -14,6 +14,18 @@ const getAllClass = (qsValue) => {
     });
   });
 };
+const registerClass = (qsValue) => {
+  return new Promise((resolve, reject) => {
+    const qs = `INSERT INTO score_subject_report (id_account,id_class,id_subject) SELECT ?,?,id_subject FROM class_subject WHERE id_class = ?`;
+    dbMySql.query(qs, qsValue, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve("berhasil");
+      }
+    });
+  });
+};
 const createClass = (qsValue) => {
   return new Promise((resolve, reject) => {
     const qs = `INSERT INTO class(class_name, category, level, description, pricing, schedule, start_time, end_time) VALUES (?,?,?,?,?,?,?,?)`;
@@ -43,7 +55,7 @@ const getAllClassAndStudent = (qsValue) => {
 const getMyClass = (qsValue) => {
   return new Promise((resolve, reject) => {
     // const qs = `SELECT DISTINCT(score_subject_report.id_class), class.class_name,class.category, class.level, class.description, class.pricing, class.schedule, class.start_time, class.end_time FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class WHERE score_subject_report.id_account = ?`;
-    const qs = `SELECT class.*, AVG(score_subject_report.score) AS SCORE FROM score_subject_report INNER JOIN class on class.id_class=score_subject_report.id_class WHERE id_account= ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_class) FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on class.id_class = class_subject.id_class where score_subject_report.id_account = ? GROUP BY id_class) GROUP BY class.id_class`;
+    const qs = `SELECT class.*, AVG(score_subject_report.score) AS SCORE FROM score_subject_report INNER JOIN class on class.id_class=score_subject_report.id_class WHERE class.class_name LIKE ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_class) FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on class.id_class = class_subject.id_class where score_subject_report.id_account = ? GROUP BY id_class) GROUP BY class.id_class ORDER by ? ?`;
     dbMySql.query(qs, qsValue, (err, result) => {
       if (err) {
         reject(err);
@@ -55,14 +67,12 @@ const getMyClass = (qsValue) => {
 };
 const getNewClass = (qsValue) => {
   return new Promise((resolve, reject) => {
-    const qs = `SELECT * FROM class WHERE id_class not IN(SELECT DISTINCT(score_subject_report.id_class)FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class WHERE score_subject_report.id_account = ? GROUP BY class.id_class)`;
+    const qs = `SELECT * FROM class WHERE class_name LIKE ? and id_class not IN(SELECT DISTINCT(score_subject_report.id_class)FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class WHERE score_subject_report.id_account = ? GROUP BY class.id_class)ORDER BY ? ?`;
     dbMySql.query(qs, qsValue, (err, result) => {
       if (err) {
         reject(err);
-      } else if (result.length === 0) {
-        reject("======");
       } else {
-        resolve((result = result[0]));
+        resolve(result);
       }
     });
   });
@@ -90,7 +100,7 @@ const createSubjectClass = (qsValue) => {
       } else if (result.length === 0) {
         reject("======");
       } else {
-        resolve((result = result[0]));
+        resolve(result);
       }
     });
   });
@@ -146,7 +156,6 @@ const updateSubReport = (qsValue, id_member) => {
     id_member.map((o) => {
       console.log(o);
       qsValueFull = [o.toString(), ...qsValue];
-      console.log(qsValueFull);
       dbMySql.query(qs, qsValueFull, (err) => {
         if (err) {
           reject("error");
@@ -233,4 +242,5 @@ module.exports = {
   updateSubjectClass,
   updateClass,
   updateScore,
+  registerClass,
 };
