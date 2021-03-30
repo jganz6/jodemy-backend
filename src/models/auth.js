@@ -6,7 +6,7 @@ const postValidation = (qsValue) => {
       if (err) {
         reject(err);
       } else if (result.length === 0) {
-        reject("email salah!");
+        reject("Wrong EMAIL!");
       } else {
         resolve(
           (result = {
@@ -25,9 +25,9 @@ const postResetPassword = (qsValue) => {
       if (err) {
         reject(err);
       } else if (result.length === 0) {
-        reject("email salah!");
+        reject("WRONG EMAIL!");
       } else {
-        resolve("berhasil");
+        resolve("Success");
       }
     });
   });
@@ -39,7 +39,7 @@ const postRegister = (qsValue) => {
       if (err) {
         reject(err);
       } else {
-        resolve("berhasil");
+        resolve("Success");
       }
     });
   });
@@ -51,7 +51,7 @@ const updateAccount = (qsValue) => {
       if (err) {
         reject(err);
       } else {
-        resolve("berhasil");
+        resolve("Success");
       }
     });
   });
@@ -63,7 +63,7 @@ const deleteAccount = (qsValue) => {
       if (err) {
         reject(err);
       } else {
-        resolve("Successful DELETE!");
+        resolve("Success!");
       }
     });
   });

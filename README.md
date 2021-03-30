@@ -1,7 +1,6 @@
 <h1 align="center"> Jodemy Backend - ExpressJs</h1>
 
-This is a simple Database Administrator application specially for backend only. Built with NodeJs using the ExpressJs Framework.
-Express.js is a web application framework for Node.js. [More about Express](https://en.wikipedia.org/wiki/Express.js)
+Jodemy backend is a server side for jodemy app in website or for jodemy app in mobile.
 
 ## Built With
 
@@ -32,8 +31,6 @@ Express.js is a web application framework for Node.js. [More about Express](http
 **2. GET**
 
 **3. GET BY ID**
-
-**5. PUT BY ID**
 
 **4. PATCH BY ID**
 
