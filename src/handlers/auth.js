@@ -11,7 +11,7 @@ const postLogin = async (req, res) => {
     if (result) {
       const validPass = await bcrypt.compare(password, result.password);
       if (!validPass) {
-        return res.status(400).send("password salah!");
+        return res.status(400).send("Wrong Password!");
       } else {
         const token = jwt.sign({ _id: result.id }, process.env.TOKEN_SECRET);
         res.header("auth-token", token).status(200).send(token);
@@ -42,7 +42,7 @@ const postRegister = async (req, res) => {
   try {
     const result = await authModel.postValidation(email);
     if (result) {
-      return res.status(400).send("email sudah ada!");
+      return res.status(400).send("Email Already Exist!");
     }
   } catch (err) {
     result = await authModel.postRegister([email, hashPassword, username]);
