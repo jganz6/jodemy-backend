@@ -64,7 +64,7 @@ const getMemberClass = async (req, res) => {
 };
 const getMemberSubjectClass = async (req, res) => {
   const { id_account, id_class } = req.params;
-  console.log(req.params);
+  console.log(id_account, id_class);
   try {
     const result = await classModel.getMemberSubjectClass([
       id_account,
@@ -72,7 +72,7 @@ const getMemberSubjectClass = async (req, res) => {
     ]);
     res.status(200).send(result);
   } catch (error) {
-    res.status(400).send("err");
+    res.status(400).send(error);
   }
 };
 const getSubjectClass = async (req, res) => {

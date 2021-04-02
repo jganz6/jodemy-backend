@@ -16,7 +16,7 @@ const getAllClass = () => {
 };
 const registerClass = (qsValue) => {
   return new Promise((resolve, reject) => {
-    const qs = `INSERT INTO score_subject_report (id_account,id_class,id_subject) SELECT ?,?,id_subject FROM class_subject WHERE id_class = ?`;
+    const qs = `INSERT INTO score_subject_report (id_account,id_class,id_subject,score) SELECT ?,?,id_subject,null FROM class_subject WHERE id_class = ?`;
     dbMySql.query(qs, qsValue, (err, result) => {
       if (err) {
         reject(err);
@@ -119,7 +119,7 @@ const getMemberClass = (qsValue) => {
 };
 const getMemberSubjectClass = (qsValue) => {
   return new Promise((resolve, reject) => {
-    const qs = `SELECT class_subject.id_class, score_subject_report.score  FROM score_subject_report INNER JOIN class_subject on class_subject.id_subject=score_subject_report.id_subject WHERE id_account= ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_account), tb_account.username FROM score_subject_report inner JOIN tb_account ON score_subject_report.id_account = tb_account.id_account WHERE score_subject_report.id_class = ?`;
+    const qs = `SELECT class_subject.id_subject, score_subject_report.score  FROM score_subject_report INNER JOIN class_subject on class_subject.id_subject=score_subject_report.id_subject WHERE id_account= ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_class) FROM score_subject_report inner JOIN tb_account ON score_subject_report.id_account = tb_account.id_account WHERE score_subject_report.id_class = ?)`;
     dbMySql.query(qs, qsValue, (err, result) => {
       if (err) {
         reject(err);
