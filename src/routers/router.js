@@ -6,4 +6,7 @@ Router.use("/ping", pingRouter);
 Router.use("/auth", authRouter);
 Router.use("/class", classRouter);
 
+// roles = student / facilitator
+// /student/class
+// /facilitator/class
 module.exports = Router;

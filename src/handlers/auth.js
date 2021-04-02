@@ -1,8 +1,7 @@
 const authModel = require("../models/auth");
-const { writeResponse, writeError } = require("../helpers/response");
+const { writeResponse } = require("../helpers/response");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { response } = require("express");
 
 const postLogin = async (req, res) => {
   const { email, password } = req.body;
@@ -28,8 +27,11 @@ const postResetPassword = async (req, res) => {
   try {
     const result = await authModel.postValidation(email);
     if (result) {
-      result = await authModel.postResetPassword([hashPassword, result.id]);
-      writeResponse(res, headers, 200, result);
+      const resultFinal = await authModel.postResetPassword([
+        hashPassword,
+        result.id,
+      ]);
+      writeResponse(res, null, 200, resultFinal);
     }
   } catch (err) {
     res.status(400).send(err);
@@ -45,12 +47,16 @@ const postRegister = async (req, res) => {
       return res.status(400).send("Email Already Exist!");
     }
   } catch (err) {
-    result = await authModel.postRegister([email, hashPassword, username]);
+    const resultFinal = await authModel.postRegister([
+      email,
+      hashPassword,
+      username,
+    ]);
     const headers = {
       "Access-Control-Allow-Origin": "http://localhost:3000",
       // "x-access-token": "token",
     };
-    writeResponse(res, headers, 200, result);
+    writeResponse(res, headers, 200, resultFinal);
   }
 };
 const updateAccount = async (req, res) => {

@@ -1,6 +1,6 @@
 const dbMySql = require("../databases/dbMySql");
 
-const getAllClass = (qsValue) => {
+const getAllClass = () => {
   return new Promise((resolve, reject) => {
     const qs = `SELECT * FROM class`;
     dbMySql.query(qs, (err, result) => {
@@ -21,7 +21,7 @@ const registerClass = (qsValue) => {
       if (err) {
         reject(err);
       } else {
-        resolve("Success");
+        resolve(result);
       }
     });
   });
@@ -40,7 +40,7 @@ const createClass = (qsValue) => {
     });
   });
 };
-const getAllClassAndStudent = (qsValue) => {
+const getAllClassAndStudent = () => {
   return new Promise((resolve, reject) => {
     const qs = `SELECT class.*, COUNT(DISTINCT(score_subject_report.id_account)) AS Student FROM score_subject_report INNER JOIN class on class.id_class=score_subject_report.id_class WHERE score_subject_report.id_class in(SELECT DISTINCT(id_class) FROM score_subject_report) GROUP by class.id_class`;
     dbMySql.query(qs, (err, result) => {
@@ -142,9 +142,9 @@ const getMemberId = (qsValue) => {
         reject("======");
       } else {
         resolve(
-          (jodie = result.map((o) => {
+          result.map((o) => {
             return o.id_account;
-          }))
+          })
         );
       }
     });
@@ -155,7 +155,7 @@ const updateSubReport = (qsValue, id_member) => {
   return new Promise((resolve, reject) => {
     id_member.map((o) => {
       console.log(o);
-      qsValueFull = [o.toString(), ...qsValue];
+      const qsValueFull = [o.toString(), ...qsValue];
       dbMySql.query(qs, qsValueFull, (err) => {
         if (err) {
           reject("error");
@@ -172,7 +172,7 @@ const deleteClass = (qsValue) => {
       if (err) {
         reject(err);
       } else {
-        resolve("Success");
+        resolve(result);
       }
     });
   });
@@ -184,7 +184,7 @@ const deleteSubjectClass = (qsValue) => {
       if (err) {
         reject(err);
       } else {
-        resolve("Success");
+        resolve(result);
       }
     });
   });

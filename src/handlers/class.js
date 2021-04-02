@@ -59,11 +59,12 @@ const getMemberClass = async (req, res) => {
     const result = await classModel.getMemberClass(id_class);
     res.status(200).send(result);
   } catch (error) {
-    res.status(400).send("err");
+    res.status(400).send(error);
   }
 };
 const getMemberSubjectClass = async (req, res) => {
   const { id_account, id_class } = req.params;
+  console.log(req.params);
   try {
     const result = await classModel.getMemberSubjectClass([
       id_account,
@@ -167,22 +168,22 @@ const updateClass = async (req, res) => {
 const updateSubjectClass = async (req, res) => {
   const updateValue = req.body;
   try {
-    const result = await authModel.updateSubjectClass([
+    const result = await classModel.updateSubjectClass([
       updateValue,
       ...req.query.id,
     ]);
     res.status(200).send(result);
   } catch (error) {
-    res.status(400).send("err");
+    res.status(400).send(error);
   }
 };
 const updateScore = async (req, res) => {
   const { score } = req.body;
   try {
-    const result = await authModel.updateScore([score, req.query.id]);
+    const result = await classModel.updateScore([score, req.query.id]);
     res.status(200).send(result);
   } catch (error) {
-    res.status(400).send("err");
+    res.status(400).send(error);
   }
 };
 module.exports = {
