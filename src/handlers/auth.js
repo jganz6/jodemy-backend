@@ -63,8 +63,8 @@ const updateAccount = async (req, res) => {
   const updateValue = req.body;
   try {
     const result = await authModel.updateAccount([
-      updateValue,
-      ...req.query.id,
+      ...updateValue,
+      req.query.id,
     ]);
     res.status(200).send(result);
   } catch (err) {
