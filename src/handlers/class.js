@@ -170,7 +170,7 @@ const updateSubjectClass = async (req, res) => {
   try {
     const result = await classModel.updateSubjectClass([
       updateValue,
-      ...req.query.id,
+      req.query.id,
     ]);
     res.status(200).send(result);
   } catch (error) {
