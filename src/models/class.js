@@ -35,7 +35,7 @@ const createClass = (qsValue) => {
       } else if (result.length === 0) {
         reject("======");
       } else {
-        resolve("Success");
+        resolve(result);
       }
     });
   });
