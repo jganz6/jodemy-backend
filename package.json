@@ -1,7 +1,7 @@
 {
   "name": "jodemy-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "<h1 align=\"center\"> Jodemy Backend - ExpressJs</h1>",
   "main": "index.js",
   "scripts": {
     "start": "node index",
@@ -17,5 +17,16 @@
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.7"
-  }
+  },
+  "devDependencies": {
+    "eslint": "^7.23.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jganz6/jodemy-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jganz6/jodemy-backend/issues"
+  },
+  "homepage": "https://github.com/jganz6/jodemy-backend#readme"
 }

@@ -189,14 +189,14 @@ const deleteSubjectClass = (qsValue) => {
     });
   });
 };
-const updateClass = (qsValue) => {
+const updateClass = (qsValue, id_class) => {
   return new Promise((resolve, reject) => {
-    const qs = `UPDATE class SET ? WHERE id_class=?`;
-    dbMySql.query(qs, qsValue, (err) => {
+    const qs = `UPDATE class SET ? WHERE id_class = ?`;
+    dbMySql.query(qs, [qsValue, id_class], (err, result) => {
       if (err) {
         reject(err);
       } else {
-        resolve("Success");
+        resolve(result);
       }
     });
   });

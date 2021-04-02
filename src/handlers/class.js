@@ -129,7 +129,7 @@ const deleteClass = async (req, res) => {
     const result = await classModel.deleteClass(id_class);
     res.status(200).send(result);
   } catch (error) {
-    res.status(400).send("err");
+    res.status(400).send(error);
   }
 };
 const deleteSubjectClass = async (req, res) => {
@@ -157,10 +157,11 @@ const updateSubReport = async (req, res) => {
 const updateClass = async (req, res) => {
   const updateValue = req.body;
   try {
-    const result = await authModel.updateClass([updateValue, ...req.query.id]);
+    const result = await classModel.updateClass(updateValue, req.query.id);
     res.status(200).send(result);
   } catch (error) {
-    res.status(400).send("err");
+    console.log(error);
+    res.status(400).send(error);
   }
 };
 const updateSubjectClass = async (req, res) => {
@@ -187,18 +188,18 @@ const updateScore = async (req, res) => {
 module.exports = {
   getAllClass,
   getAllClassAndStudent,
-  createClass,
   getMyClass,
   getNewClass,
   getMemberClass,
   getSubjectClass,
-  createSubjectClass,
   getMemberSubjectClass,
-  deleteClass,
-  deleteSubjectClass,
+  createClass,
+  createSubjectClass,
   updateSubReport,
   updateSubjectClass,
   updateClass,
   updateScore,
   registerClass,
+  deleteClass,
+  deleteSubjectClass,
 };

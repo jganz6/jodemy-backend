@@ -9,12 +9,11 @@ const writeResponse = (res, header, status, result) => {
       result,
     };
   }
-
   res.status(status).json(response);
 };
 
 const writeError = (res, status, err) => {
-  res.status(status).json(new Error(err));
+  res.status(status).json(err);
 };
 
 module.exports = {
