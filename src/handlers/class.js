@@ -1,6 +1,7 @@
 const classModel = require("../models/class");
 const { searchValue } = require("./../helpers/searchValue");
 const { sortBy } = require("./../helpers/sortBy");
+const response = require("./../helpers/response");
 
 const getAllClass = async (req, res) => {
   try {
@@ -32,25 +33,23 @@ const getAllClassAndStudent = async (req, res) => {
   }
 };
 const getMyClass = async (req, res) => {
-  const { id_account } = req.params;
   const { search, sort } = req.query;
-  const qsValue = [searchValue(search), id_account, ...sortBy(sort)];
+  const qsValue = [searchValue(search), req.user._id, ...sortBy(sort)];
   try {
     const result = await classModel.getMyClass(qsValue);
-    res.status(200).send(result);
+    response(res, null, [result], 200, true);
   } catch (error) {
-    res.status(400).send(error);
+    response(res, "Failed", error, 400, false);
   }
 };
 const getNewClass = async (req, res) => {
-  const { id_account } = req.params;
   const { search, sort } = req.query;
-  const qsValue = [searchValue(search), id_account, ...sortBy(sort)];
+  const qsValue = [searchValue(search), req.user._id, ...sortBy(sort)];
   try {
     const result = await classModel.getNewClass(qsValue);
-    res.status(200).send(result);
+    response(res, null, [result], 200, true);
   } catch (error) {
-    res.status(400).send(error);
+    response(res, "Failed", ...error, 400, false);
   }
 };
 const getMemberClass = async (req, res) => {
@@ -76,12 +75,12 @@ const getMemberSubjectClass = async (req, res) => {
   }
 };
 const getSubjectClass = async (req, res) => {
-  const { id_account } = req.params;
+  const { id_class } = req.params;
   try {
-    const result = await classModel.getSubjectClass([id_account, id_account]);
-    res.status(200).send(result);
+    const result = await classModel.getSubjectClass([req.user._id, id_class]);
+    response(res, null, [result], 200, true);
   } catch (error) {
-    res.status(400).send(error);
+    response(res, "Failed", ...error, 400, false);
   }
 };
 const createSubjectClass = async (req, res) => {

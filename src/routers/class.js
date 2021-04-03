@@ -1,9 +1,14 @@
 const Router = require("express").Router();
 const classHandler = require("../handlers/class");
+const verifyToken = require("../middlewares/verifyToken");
 //-------------------------------Student
-Router.get("/getMyClass/:id_account", classHandler.getMyClass);
-Router.get("/getNewClass/:id_account", classHandler.getNewClass);
-Router.get("/getSubjectClass/:id_account", classHandler.getSubjectClass);
+Router.get("/myClass", verifyToken, classHandler.getMyClass);
+Router.get("/newClass", verifyToken, classHandler.getNewClass);
+Router.get(
+  "/subjectClass/:id_class",
+  verifyToken,
+  classHandler.getSubjectClass
+);
 Router.post("/registerClass", classHandler.registerClass);
 //-------------------------------FACILITATOR
 Router.get("/getAllClassAndStudent", classHandler.getAllClassAndStudent);
