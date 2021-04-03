@@ -7,7 +7,7 @@ const getAllClass = async (req, res) => {
     const result = await classModel.getAllClass();
     res.status(200).send(result);
   } catch (error) {
-    res.status(400).send("err");
+    res.status(400).send(error);
   }
 };
 const registerClass = async (req, res) => {
@@ -20,7 +20,7 @@ const registerClass = async (req, res) => {
     ]);
     res.status(200).send(result);
   } catch (error) {
-    res.status(400).send("err");
+    res.status(400).send(error);
   }
 };
 const getAllClassAndStudent = async (req, res) => {
@@ -28,7 +28,7 @@ const getAllClassAndStudent = async (req, res) => {
     const result = await classModel.getAllClassAndStudent();
     res.status(200).send(result);
   } catch (error) {
-    res.status(400).send("err");
+    res.status(400).send(error);
   }
 };
 const getMyClass = async (req, res) => {
@@ -39,7 +39,7 @@ const getMyClass = async (req, res) => {
     const result = await classModel.getMyClass(qsValue);
     res.status(200).send(result);
   } catch (error) {
-    res.status(400).send("err");
+    res.status(400).send(error);
   }
 };
 const getNewClass = async (req, res) => {
@@ -50,7 +50,7 @@ const getNewClass = async (req, res) => {
     const result = await classModel.getNewClass(qsValue);
     res.status(200).send(result);
   } catch (error) {
-    res.status(400).send("err");
+    res.status(400).send(error);
   }
 };
 const getMemberClass = async (req, res) => {
@@ -81,7 +81,7 @@ const getSubjectClass = async (req, res) => {
     const result = await classModel.getSubjectClass([id_account, id_account]);
     res.status(200).send(result);
   } catch (error) {
-    res.status(400).send("err");
+    res.status(400).send(error);
   }
 };
 const createSubjectClass = async (req, res) => {
@@ -94,7 +94,7 @@ const createSubjectClass = async (req, res) => {
     ]);
     res.status(200).send(result);
   } catch (error) {
-    res.status(400).send("err");
+    res.status(400).send(error);
   }
 };
 const createClass = async (req, res) => {
@@ -121,7 +121,7 @@ const createClass = async (req, res) => {
     ]);
     res.status(200).send(result);
   } catch (err) {
-    res.status(400).send("err");
+    res.status(400).send(err);
   }
 };
 const deleteClass = async (req, res) => {
@@ -139,7 +139,7 @@ const deleteSubjectClass = async (req, res) => {
     const result = await classModel.deleteSubjectClass(id_class);
     res.status(200).send(result);
   } catch (error) {
-    res.status(400).send("err");
+    res.status(400).send(error);
   }
 };
 const updateSubReport = async (req, res) => {
@@ -152,7 +152,7 @@ const updateSubReport = async (req, res) => {
     );
     res.status(200).send(resultFINAL);
   } catch (error) {
-    res.status(400).send("err");
+    res.status(400).send(error);
   }
 };
 const updateClass = async (req, res) => {

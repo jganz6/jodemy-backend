@@ -1,5 +1,5 @@
 const authModel = require("../models/auth");
-const { writeResponse } = require("../helpers/response");
+const response = require("../helpers/response");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
@@ -10,14 +10,15 @@ const postLogin = async (req, res) => {
     if (result) {
       const validPass = await bcrypt.compare(password, result.password);
       if (!validPass) {
-        return res.status(400).send("Wrong Password!");
+        return response(res, "Failed", { error: "Wrong Password" }, 400, false);
       } else {
         const token = jwt.sign({ _id: result.id }, process.env.TOKEN_SECRET);
-        res.header("auth-token", token).status(200).send(token);
+        res.header("auth-token", token);
+        response(res, null, { token: token }, 200, true);
       }
     }
   } catch (err) {
-    if (err) res.status(400).send(err);
+    if (err) response(res, "Failed", { err }, 400, false);
   }
 };
 const postResetPassword = async (req, res) => {
@@ -31,10 +32,10 @@ const postResetPassword = async (req, res) => {
         hashPassword,
         result.id,
       ]);
-      writeResponse(res, null, 200, resultFinal);
+      response(res, null, { resultFinal }, 200, true);
     }
   } catch (err) {
-    res.status(400).send(err);
+    response(res, "Error", { err }, 400, false);
   }
 };
 const postRegister = async (req, res) => {
@@ -44,7 +45,13 @@ const postRegister = async (req, res) => {
   try {
     const result = await authModel.postValidation(email);
     if (result) {
-      return res.status(400).send("Email Already Exist!");
+      return response(
+        res,
+        "Failed",
+        { error: "Email Already Exist" },
+        400,
+        false
+      );
     }
   } catch (err) {
     const resultFinal = await authModel.postRegister([
@@ -56,27 +63,25 @@ const postRegister = async (req, res) => {
       "Access-Control-Allow-Origin": "http://localhost:3000",
       // "x-access-token": "token",
     };
-    writeResponse(res, headers, 200, resultFinal);
+    res.header(headers);
+    response(res, null, { resultFinal }, 200, true);
   }
 };
 const updateAccount = async (req, res) => {
   const updateValue = req.body;
   try {
-    const result = await authModel.updateAccount([
-      ...updateValue,
-      req.query.id,
-    ]);
-    res.status(200).send(result);
+    const result = await authModel.updateAccount(updateValue, req.query.id);
+    response(res, null, { result }, 200, true);
   } catch (err) {
-    res.status(400).send(err);
+    response(res, "Error", err, 400, false);
   }
 };
 const deleteAccount = async (req, res) => {
   try {
     const result = await authModel.deleteAccount(req.query.id);
-    res.status(200).send(result);
+    response(res, null, { result }, 200, true);
   } catch (err) {
-    res.status(400).send(err);
+    response(res, "Error", { err }, 400, false);
   }
 };
 

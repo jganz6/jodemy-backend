@@ -35,23 +35,23 @@ const postResetPassword = (qsValue) => {
 const postRegister = (qsValue) => {
   return new Promise((resolve, reject) => {
     const qs = `INSERT INTO tb_account (email, password, username) VALUES(? , ? , ?)`;
-    dbMySql.query(qs, qsValue, (err) => {
+    dbMySql.query(qs, qsValue, (err, result) => {
       if (err) {
         reject(err);
       } else {
-        resolve("Success");
+        resolve(result);
       }
     });
   });
 };
-const updateAccount = (qsValue) => {
+const updateAccount = (qsValue, id) => {
   return new Promise((resolve, reject) => {
-    const qs = `UPDATE tb_account SET ? WHERE id_account=?`;
-    dbMySql.query(qs, qsValue, (err) => {
+    const qs = `UPDATE tb_account SET ? WHERE id_account = ?`;
+    dbMySql.query(qs, [qsValue, id], (err, result) => {
       if (err) {
         reject(err);
       } else {
-        resolve("Success");
+        resolve(result);
       }
     });
   });
