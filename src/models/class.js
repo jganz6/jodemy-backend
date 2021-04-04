@@ -28,12 +28,10 @@ const registerClass = (qsValue) => {
 };
 const createClass = (qsValue) => {
   return new Promise((resolve, reject) => {
-    const qs = `INSERT INTO class(class_name, category, level, description, pricing, schedule, start_time, end_time) VALUES (?,?,?,?,?,?,?,?)`;
+    const qs = `INSERT INTO class (class_name, category, level, description, pricing, schedule, start_time, end_time) VALUES (?,?,?,?,?,?,?,?)`;
     dbMySql.query(qs, qsValue, (err, result) => {
       if (err) {
         reject(err);
-      } else if (result.length === 0) {
-        reject("======");
       } else {
         resolve(result);
       }
@@ -99,8 +97,6 @@ const createSubjectClass = (qsValue) => {
     dbMySql.query(qs, qsValue, (err, result) => {
       if (err) {
         reject(err);
-      } else if (result.length === 0) {
-        reject("======");
       } else {
         resolve(result);
       }
@@ -217,7 +213,7 @@ const updateSubjectClass = (qsValue, id_subject) => {
 };
 const updateScore = (qsValue) => {
   return new Promise((resolve, reject) => {
-    const qs = `UPDATE score_subject_report SET score = ? WHERE id_subject = ?`;
+    const qs = `UPDATE score_subject_report SET score = ? WHERE id_account= ? and id_subject = ?`;
     dbMySql.query(qs, qsValue, (err) => {
       if (err) {
         reject(err);

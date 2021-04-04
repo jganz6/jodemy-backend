@@ -86,13 +86,14 @@ const getSubjectClass = async (req, res) => {
 const createSubjectClass = async (req, res) => {
   const { id_class, subject_name, subject_date } = req.body;
   try {
-    const result = await classModel.getSubjectClass([
+    const result = await classModel.createSubjectClass([
       id_class,
       subject_name,
       subject_date,
     ]);
     res.status(200).send(result);
   } catch (error) {
+    console.log(error);
     res.status(400).send(error);
   }
 };
@@ -108,7 +109,7 @@ const createClass = async (req, res) => {
     end_time,
   } = req.body;
   try {
-    const result = await classModel.createrClass([
+    const result = await classModel.createClass([
       class_name,
       category,
       level,
@@ -120,6 +121,7 @@ const createClass = async (req, res) => {
     ]);
     res.status(200).send(result);
   } catch (err) {
+    console.log(err);
     res.status(400).send(err);
   }
 };
@@ -133,9 +135,9 @@ const deleteClass = async (req, res) => {
   }
 };
 const deleteSubjectClass = async (req, res) => {
-  const { id_class } = req.params;
+  const { id_subject } = req.params;
   try {
-    const result = await classModel.deleteSubjectClass(id_class);
+    const result = await classModel.deleteSubjectClass(id_subject);
     res.status(200).send(result);
   } catch (error) {
     res.status(400).send(error);
@@ -177,9 +179,13 @@ const updateSubjectClass = async (req, res) => {
   }
 };
 const updateScore = async (req, res) => {
-  const { score } = req.body;
+  const { score, id_subject } = req.body;
   try {
-    const result = await classModel.updateScore([score, req.query.id]);
+    const result = await classModel.updateScore([
+      score,
+      req.query.id,
+      id_subject,
+    ]);
     res.status(200).send(result);
   } catch (error) {
     res.status(400).send(error);
