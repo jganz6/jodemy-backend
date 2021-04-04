@@ -1,8 +1,10 @@
 require("dotenv").config();
 const logger = require("morgan");
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const Router = require("./src/routers/router");
+app.use(cors());
 app.listen(process.env.PORT, () => {
   console.log("Server Running at Port", process.env.PORT);
 });

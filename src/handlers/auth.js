@@ -7,6 +7,7 @@ const postLogin = async (req, res) => {
   const { email, password } = req.body;
   try {
     const result = await authModel.postValidation(email);
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
     if (result) {
       const validPass = await bcrypt.compare(password, result.password);
       if (!validPass) {
