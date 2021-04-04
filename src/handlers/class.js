@@ -19,9 +19,9 @@ const registerClass = async (req, res) => {
       req.query.id_class,
       req.query.id_class,
     ]);
-    res.status(200).send(result);
+    response(res, null, [result], 200, true);
   } catch (error) {
-    res.status(400).send(error);
+    response(res, "Failed", error, 400, false);
   }
 };
 const getAllClassAndStudent = async (req, res) => {
