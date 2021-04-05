@@ -25,7 +25,8 @@ const postLogin = async (req, res) => {
       }
     }
   } catch (err) {
-    if (err) response(res, "Wrond Email or Password", {}, 400, false);
+    if (err)
+      response(res, null, { error: "Wrong Email or Password" }, 400, false);
   }
 };
 const postResetPassword = async (req, res) => {

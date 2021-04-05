@@ -122,7 +122,7 @@ const createClass = async (req, res) => {
     response(res, null, [result], 200, true);
   } catch (err) {
     console.log(err);
-    response(res, "Failed", ...err, 400, false);
+    response(res, "Failed", err, 400, false);
   }
 };
 const deleteClass = async (req, res) => {
@@ -131,7 +131,7 @@ const deleteClass = async (req, res) => {
     const result = await classModel.deleteClass(id_class);
     response(res, null, [result], 200, true);
   } catch (error) {
-    response(res, "Failed", ...error, 400, false);
+    response(res, "Failed", error, 400, false);
   }
 };
 const deleteSubjectClass = async (req, res) => {
@@ -140,7 +140,7 @@ const deleteSubjectClass = async (req, res) => {
     const result = await classModel.deleteSubjectClass(id_subject);
     response(res, null, [result], 200, true);
   } catch (error) {
-    response(res, "Failed", ...error, 400, false);
+    response(res, "Failed", error, 400, false);
   }
 };
 const updateSubReport = async (req, res) => {
@@ -159,7 +159,7 @@ const updateSubReport = async (req, res) => {
 const updateClass = async (req, res) => {
   const updateValue = req.body;
   try {
-    const result = await classModel.updateClass(updateValue, req.query.id);
+    const result = await classModel.updateClass([updateValue, req.query.id]);
     response(res, null, [result], 200, true);
   } catch (error) {
     console.log(error);

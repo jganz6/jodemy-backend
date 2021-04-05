@@ -27,7 +27,7 @@ Router.patch("/update", classHandler.updateClass);
 Router.patch("/update/subject", classHandler.updateSubjectClass);
 Router.patch("/addScore", classHandler.updateScore);
 Router.delete("/delete/:id_class", classHandler.deleteClass);
-Router.delete("/delete/subject/:id_class", classHandler.deleteSubjectClass);
+Router.delete("/delete/subject/:id_subject", classHandler.deleteSubjectClass);
 //===============PUBLIC===================
 Router.get("/", classHandler.getAllClass);
 module.exports = Router;
