@@ -9,25 +9,25 @@ Router.get(
   verifyToken,
   classHandler.getSubjectClass
 );
-Router.post("/registerClass", classHandler.registerClass);
+Router.post("/register", classHandler.registerClass);
 //-------------------------------FACILITATOR
-Router.get("/getAllClassAndStudent", classHandler.getAllClassAndStudent);
-Router.get("/getMemberClass/:id_class", classHandler.getMemberClass);
+Router.get("/list", classHandler.getAllClassAndStudent);
+Router.get("/members/:id_class", classHandler.getMemberClass);
 Router.get(
-  "/getMemberSubjectClass/:id_account.:id_class",
+  "/members/subject/:id_account.:id_class",
   classHandler.getMemberSubjectClass
 );
-Router.post("/createClass", classHandler.createClass);
-Router.post("/createSubjectClass", classHandler.createSubjectClass);
+Router.post("/create", classHandler.createClass);
+Router.post("/create/subject", classHandler.createSubjectClass);
 Router.post(
   "/updateSubReport/:id_class.:id_subject",
   classHandler.updateSubReport
 );
-Router.patch("/updateClass", classHandler.updateClass);
-Router.patch("/updateSubjectClass", classHandler.updateSubjectClass);
-Router.patch("/updateScore", classHandler.updateScore);
-Router.delete("/deleteClass/:id_class", classHandler.deleteClass);
-Router.delete("/deleteSubjectClass/:id_class", classHandler.deleteSubjectClass);
+Router.patch("/update", classHandler.updateClass);
+Router.patch("/update/subject", classHandler.updateSubjectClass);
+Router.patch("/addScore", classHandler.updateScore);
+Router.delete("/delete/:id_class", classHandler.deleteClass);
+Router.delete("/delete/subject/:id_class", classHandler.deleteSubjectClass);
 //===============PUBLIC===================
 Router.get("/", classHandler.getAllClass);
 module.exports = Router;
