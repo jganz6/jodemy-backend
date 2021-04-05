@@ -91,10 +91,10 @@ const createSubjectClass = async (req, res) => {
       subject_name,
       subject_date,
     ]);
-    res.status(200).send(result);
+    response(res, null, [result], 200, true);
   } catch (error) {
     console.log(error);
-    res.status(400).send(error);
+    response(res, "Failed", ...error, 400, false);
   }
 };
 const createClass = async (req, res) => {
@@ -119,28 +119,28 @@ const createClass = async (req, res) => {
       start_time,
       end_time,
     ]);
-    res.status(200).send(result);
+    response(res, null, [result], 200, true);
   } catch (err) {
     console.log(err);
-    res.status(400).send(err);
+    response(res, "Failed", ...err, 400, false);
   }
 };
 const deleteClass = async (req, res) => {
   const { id_class } = req.params;
   try {
     const result = await classModel.deleteClass(id_class);
-    res.status(200).send(result);
+    response(res, null, [result], 200, true);
   } catch (error) {
-    res.status(400).send(error);
+    response(res, "Failed", ...error, 400, false);
   }
 };
 const deleteSubjectClass = async (req, res) => {
   const { id_subject } = req.params;
   try {
     const result = await classModel.deleteSubjectClass(id_subject);
-    res.status(200).send(result);
+    response(res, null, [result], 200, true);
   } catch (error) {
-    res.status(400).send(error);
+    response(res, "Failed", ...error, 400, false);
   }
 };
 const updateSubReport = async (req, res) => {
@@ -151,19 +151,19 @@ const updateSubReport = async (req, res) => {
       [id_class, id_subject],
       result
     );
-    res.status(200).send(resultFINAL);
+    response(res, null, [resultFINAL], 200, true);
   } catch (error) {
-    res.status(400).send(error);
+    response(res, "Failed", ...error, 400, false);
   }
 };
 const updateClass = async (req, res) => {
   const updateValue = req.body;
   try {
     const result = await classModel.updateClass(updateValue, req.query.id);
-    res.status(200).send(result);
+    response(res, null, [result], 200, true);
   } catch (error) {
     console.log(error);
-    res.status(400).send(error);
+    response(res, "Failed", ...error, 400, false);
   }
 };
 const updateSubjectClass = async (req, res) => {
@@ -173,9 +173,9 @@ const updateSubjectClass = async (req, res) => {
       updateValue,
       req.query.id,
     ]);
-    res.status(200).send(result);
+    response(res, null, [result], 200, true);
   } catch (error) {
-    res.status(400).send(error);
+    response(res, "Failed", ...error, 400, false);
   }
 };
 const updateScore = async (req, res) => {
@@ -186,9 +186,9 @@ const updateScore = async (req, res) => {
       req.query.id,
       id_subject,
     ]);
-    res.status(200).send(result);
+    response(res, null, [result], 200, true);
   } catch (error) {
-    res.status(400).send(error);
+    response(res, "Failed", ...error, 400, false);
   }
 };
 module.exports = {

@@ -11,7 +11,13 @@ const postLogin = async (req, res) => {
     if (result) {
       const validPass = await bcrypt.compare(password, result.password);
       if (!validPass) {
-        return response(res, "Failed", { error: "Wrong Password" }, 400, false);
+        return response(
+          res,
+          "Failed",
+          { error: "Wrong Email or Password" },
+          400,
+          false
+        );
       } else {
         const token = jwt.sign({ _id: result.id }, process.env.TOKEN_SECRET);
         res.header("auth-token", token);
@@ -19,7 +25,7 @@ const postLogin = async (req, res) => {
       }
     }
   } catch (err) {
-    if (err) response(res, "Failed", { err }, 400, false);
+    if (err) response(res, "Wrond Email or Password", {}, 400, false);
   }
 };
 const postResetPassword = async (req, res) => {
@@ -68,28 +74,9 @@ const postRegister = async (req, res) => {
     response(res, null, { resultFinal }, 200, true);
   }
 };
-const updateAccount = async (req, res) => {
-  const updateValue = req.body;
-  try {
-    const result = await authModel.updateAccount(updateValue, req.query.id);
-    response(res, null, { result }, 200, true);
-  } catch (err) {
-    response(res, "Error", err, 400, false);
-  }
-};
-const deleteAccount = async (req, res) => {
-  try {
-    const result = await authModel.deleteAccount(req.query.id);
-    response(res, null, { result }, 200, true);
-  } catch (err) {
-    response(res, "Error", { err }, 400, false);
-  }
-};
 
 module.exports = {
   postLogin,
   postResetPassword,
   postRegister,
-  updateAccount,
-  deleteAccount,
 };
