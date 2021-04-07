@@ -38,14 +38,33 @@ const createClass = (qsValue) => {
     });
   });
 };
-const getAllClassAndStudent = () => {
+const getAllClassAndStudent = (query) => {
   return new Promise((resolve, reject) => {
     const qs = `SELECT class.*, COUNT(DISTINCT(score_subject_report.id_account)) AS Student FROM score_subject_report INNER JOIN class on class.id_class=score_subject_report.id_class WHERE score_subject_report.id_class in(SELECT DISTINCT(id_class) FROM score_subject_report) GROUP by class.id_class`;
-    dbMySql.query(qs, (err, result) => {
+    const paginate = "LIMIT ? OFFSET ?";
+    const qsWithPaginate = qs.concat(" ", paginate);
+    const limit = Number(query.limit) || 3;
+    const page = Number(query.page) || 1;
+    const offset = (page - 1) * limit;
+    dbMySql.query(qsWithPaginate, [limit, offset], (err, result) => {
       if (err) {
+        console.log(err);
         reject(err);
       } else {
-        resolve(result);
+        const qsCount =
+          "SELECT COUNT(DISTINCT(class.id_class)) AS count FROM score_subject_report INNER JOIN class on class.id_class=score_subject_report.id_class WHERE score_subject_report.id_class in(SELECT DISTINCT(id_class) FROM score_subject_report)";
+        // escaped character (\) => sehingga tanda yang digunakan sebagai syntax muncul sebagai string
+        dbMySql.query(qsCount, (err, data) => {
+          if (err) return reject(err);
+          const { count } = data[0];
+          let finalResult = {
+            result,
+            count,
+            page,
+            limit,
+          };
+          resolve(finalResult);
+        });
       }
     });
   });
@@ -87,31 +106,71 @@ const getMyClass = (qsValue, query) => {
     );
   });
 };
-const getNewClass = (qsValue) => {
+const getNewClass = (qsValue, query) => {
   return new Promise((resolve, reject) => {
     const qs = `SELECT * FROM class WHERE class_name LIKE ? and id_class not IN(SELECT DISTINCT(score_subject_report.id_class)FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class WHERE score_subject_report.id_account = ? GROUP BY class.id_class)ORDER BY ? ?`;
-    dbMySql.query(qs, qsValue, (err, result) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
+    const paginate = "LIMIT ? OFFSET ?";
+    const qsWithPaginate = qs.concat(" ", paginate);
+    const limit = Number(query.limit) || 3;
+    const page = Number(query.page) || 1;
+    const offset = (page - 1) * limit;
+    dbMySql.query(
+      qsWithPaginate,
+      [...qsValue, limit, offset],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          const qsCount = `SELECT count(*) as count FROM class WHERE class_name LIKE ? and id_class not IN(SELECT DISTINCT(score_subject_report.id_class)FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class WHERE score_subject_report.id_account = ?)ORDER BY ? ?`;
+          dbMySql.query(qsCount, qsValue, (err, data) => {
+            if (err) return reject(err);
+            const { count } = data[0];
+            let finalResult = {
+              result,
+              count,
+              page,
+              limit,
+            };
+            resolve(finalResult);
+          });
+        }
       }
-    });
+    );
   });
 };
-const getSubjectClass = (qsValue) => {
+const getSubjectClass = (qsValue, query) => {
   return new Promise((resolve, reject) => {
     //SELECT class_subject.*, score_subject_report.score  FROM score_subject_report INNER JOIN class_subject on class_subject.id_subject=score_subject_report.id_subject WHERE id_account= ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_class) FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on class.id_class = class_subject.id_class where score_subject_report.id_account = ? GROUP BY id_class)
     const qs = `SELECT class_subject.*, score_subject_report.score  FROM score_subject_report INNER JOIN class_subject on class_subject.id_subject=score_subject_report.id_subject WHERE id_account= ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_class) FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on class.id_class = class_subject.id_class where score_subject_report.id_class = ? GROUP BY id_class)`;
-    dbMySql.query(qs, qsValue, (err, result) => {
-      if (err) {
-        reject(err);
-      } else if (result.length === 0) {
-        reject("======");
-      } else {
-        resolve(result);
+    const paginate = "LIMIT ? OFFSET ?";
+    const qsWithPaginate = qs.concat(" ", paginate);
+    const limit = Number(query.limit) || 3;
+    const page = Number(query.page) || 1;
+    const offset = (page - 1) * limit;
+    dbMySql.query(
+      qsWithPaginate,
+      [...qsValue, limit, offset],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          const qsCount = `SELECT count(class_subject.id_subject) as count  FROM score_subject_report INNER JOIN class_subject on class_subject.id_subject=score_subject_report.id_subject WHERE id_account= ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_class) FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on class.id_class = class_subject.id_class where score_subject_report.id_class = ? )`;
+          dbMySql.query(qsCount, qsValue, (err, data) => {
+            if (err) return reject(err);
+            const { count } = data[0];
+            let finalResult = {
+              result,
+              count,
+              page,
+              limit,
+            };
+            resolve(finalResult);
+          });
+        }
       }
-    });
+    );
   });
 };
 const createSubjectClass = (qsValue) => {
@@ -121,35 +180,78 @@ const createSubjectClass = (qsValue) => {
       if (err) {
         reject(err);
       } else {
-        resolve(result);
+        resolve(result.insertId);
       }
     });
   });
 };
-const getMemberClass = (qsValue) => {
+const getMemberClass = (qsValue, query) => {
   return new Promise((resolve, reject) => {
     const qs = `SELECT DISTINCT(score_subject_report.id_account), tb_account.username FROM score_subject_report inner JOIN tb_account ON score_subject_report.id_account = tb_account.id_account WHERE score_subject_report.id_class = ?`;
-    dbMySql.query(qs, qsValue, (err, result) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
+    const paginate = "LIMIT ? OFFSET ?";
+    const qsWithPaginate = qs.concat(" ", paginate);
+    const limit = Number(query.limit) || 3;
+    const page = Number(query.page) || 1;
+    const offset = (page - 1) * limit;
+    dbMySql.query(
+      qsWithPaginate,
+      [...qsValue, limit, offset],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          const qsCount =
+            "SELECT count(DISTINCT(score_subject_report.id_account)) as count FROM score_subject_report inner JOIN tb_account ON score_subject_report.id_account = tb_account.id_account WHERE score_subject_report.id_class = ?";
+          dbMySql.query(qsCount, qsValue, (err, data) => {
+            if (err) return reject(err);
+            const { count } = data[0];
+            let finalResult = {
+              result,
+              count,
+              page,
+              limit,
+            };
+            resolve(finalResult);
+          });
+        }
       }
-    });
+    );
   });
 };
-const getMemberSubjectClass = (qsValue) => {
+const getMemberSubjectClass = (qsValue, query) => {
   return new Promise((resolve, reject) => {
     const qs = `SELECT class_subject.id_subject, score_subject_report.score  FROM score_subject_report INNER JOIN class_subject on class_subject.id_subject=score_subject_report.id_subject WHERE id_account= ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_class) FROM score_subject_report inner JOIN tb_account ON score_subject_report.id_account = tb_account.id_account WHERE score_subject_report.id_class = ?)`;
-    dbMySql.query(qs, qsValue, (err, result) => {
-      if (err) {
-        reject(err);
-      } else if (result.length === 0) {
-        reject("======");
-      } else {
-        resolve(result);
+    const paginate = "LIMIT ? OFFSET ?";
+    const qsWithPaginate = qs.concat(" ", paginate);
+    const limit = Number(query.limit) || 3;
+    const page = Number(query.page) || 1;
+    const offset = (page - 1) * limit;
+    dbMySql.query(
+      qsWithPaginate,
+      [...qsValue, limit, offset],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          const qsCount =
+            "SELECT count(class_subject.id_subject) as count FROM score_subject_report INNER JOIN class_subject on class_subject.id_subject=score_subject_report.id_subject WHERE id_account= ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_class) FROM score_subject_report inner JOIN tb_account ON score_subject_report.id_account = tb_account.id_account WHERE score_subject_report.id_class = ?)";
+          // escaped character (\) => sehingga tanda yang digunakan sebagai syntax muncul sebagai string
+          dbMySql.query(qsCount, qsValue, (err, data) => {
+            if (err) return reject(err);
+            const { count } = data[0];
+            let finalResult = {
+              result,
+              count,
+              page,
+              limit,
+            };
+            resolve(finalResult);
+          });
+        }
       }
-    });
+    );
   });
 };
 const getMemberId = (qsValue) => {
@@ -159,8 +261,6 @@ const getMemberId = (qsValue) => {
       if (err) {
         // throw err;
         reject(err);
-      } else if (result.length === 0) {
-        reject("======");
       } else {
         resolve(
           result.map((o) => {

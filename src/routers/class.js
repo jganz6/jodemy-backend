@@ -17,17 +17,13 @@ Router.get(
   "/members/subject/:id_account.:id_class",
   classHandler.getMemberSubjectClass
 );
-Router.post("/create", classHandler.createClass);
-Router.post("/create/subject", classHandler.createSubjectClass);
-Router.post(
-  "/updateSubReport/:id_class.:id_subject",
-  classHandler.updateSubReport
-);
-Router.patch("/update", classHandler.updateClass);
-Router.patch("/update/subject", classHandler.updateSubjectClass);
+Router.post("/", classHandler.createClass);
+Router.post("/subject", classHandler.createSubjectClass);
+Router.patch("/:id_class", classHandler.updateClass);
+Router.patch("/subject/:id_subject", classHandler.updateSubjectClass);
 Router.patch("/addScore", classHandler.updateScore);
-Router.delete("/delete/:id_class", classHandler.deleteClass);
-Router.delete("/delete/subject/:id_subject", classHandler.deleteSubjectClass);
+Router.delete("/:id_class", classHandler.deleteClass);
+Router.delete("/subject/:id_subject", classHandler.deleteSubjectClass);
 //===============PUBLIC===================
 Router.get("/", classHandler.getAllClass);
 module.exports = Router;
