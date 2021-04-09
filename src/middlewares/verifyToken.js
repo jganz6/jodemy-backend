@@ -3,7 +3,10 @@ const allRole = (req, res, next) => {
   const token = req.header(`auth-token`);
   if (!token) return res.status(401).send(`Access Denied`);
   try {
-    const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+    const options = {
+      issuer: process.env.ISSUER,
+    };
+    const verified = jwt.verify(token, process.env.TOKEN_SECRET, options);
     req.user = verified;
     console.log(req.user);
     next();
@@ -15,7 +18,10 @@ const student = (req, res, next) => {
   const token = req.header(`auth-token`);
   if (!token) return res.status(401).send(`Access Denied`);
   try {
-    const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+    const options = {
+      issuer: process.env.ISSUER,
+    };
+    const verified = jwt.verify(token, process.env.TOKEN_SECRET, options);
     req.user = verified;
     console.log(req.user);
     if (req.user._role === 0) {
@@ -31,7 +37,10 @@ const facilitator = (req, res, next) => {
   const token = req.header(`auth-token`);
   if (!token) return res.status(401).send(`Access Denied`);
   try {
-    const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+    const options = {
+      issuer: process.env.ISSUER,
+    };
+    const verified = jwt.verify(token, process.env.TOKEN_SECRET, options);
     req.user = verified;
     console.log(req.user);
     if (req.user._role === 1) {
