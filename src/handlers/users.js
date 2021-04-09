@@ -11,8 +11,15 @@ const getUsersInfo = async (req, res) => {
   }
 };
 const updateAccount = async (req, res) => {
-  const updateValue = req.body;
+  let updateValue = req.body;
   try {
+    if (req.file) {
+      const { file } = req;
+      const url = `/images/${file.filename}`;
+      const photo_profile = url;
+      updateValue = { ...updateValue, photo_profile };
+    }
+    console.log(updateValue);
     const result = await usersModel.updateAccount(updateValue, req.user._id);
     response(res, null, { result }, 200, true);
   } catch (err) {

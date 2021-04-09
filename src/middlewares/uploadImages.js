@@ -3,17 +3,12 @@ const path = require("path");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // cb(null, `./public${file.fieldname === "image" ? "/images" : "/docs"}`);
     cb(null, "./public/images");
   },
   filename: (req, file, cb) => {
     const nameFormat = `${Date.now()}-${file.fieldname}${path.extname(
       file.originalname
     )}`;
-    // upload gambar-bola.jpg via field image
-    // timestamp-image.jpg
-    // userId-field-timestamp.extension
-    // courseId-field-timestamp.extension
     cb(null, nameFormat);
   },
 });
