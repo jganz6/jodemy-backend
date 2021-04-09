@@ -12,6 +12,7 @@ const postValidation = (qsValue) => {
           (result = {
             id: `${result[0].id_account}`,
             password: `${result[0].password}`,
+            role: `${result[0].role}`,
           })
         );
       }

@@ -12,10 +12,9 @@ const getAllClass = async (req, res) => {
   }
 };
 const registerClass = async (req, res) => {
-  console.log(req.query.id_class);
   try {
     const result = await classModel.registerClass([
-      req.query.id_account,
+      req.user._id,
       req.query.id_class,
       req.query.id_class,
     ]);
@@ -27,7 +26,10 @@ const registerClass = async (req, res) => {
 const getAllClassAndStudent = async (req, res) => {
   const { query, baseUrl, path, hostname, protocol } = req;
   try {
-    const finalResult = await classModel.getAllClassAndStudent(req.query);
+    const finalResult = await classModel.getAllClassAndStudent(
+      req.user._id,
+      req.query
+    );
     const { result, count, page, limit } = finalResult;
     const totalPage = Math.ceil(count / limit);
     const url =
@@ -234,6 +236,7 @@ const createClass = async (req, res) => {
   } = req.body;
   try {
     const result = await classModel.createClass([
+      req.user._id,
       class_name,
       category,
       level,

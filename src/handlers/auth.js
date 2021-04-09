@@ -19,7 +19,15 @@ const postLogin = async (req, res) => {
           false
         );
       } else {
-        const token = jwt.sign({ _id: result.id }, process.env.TOKEN_SECRET);
+        const options = {
+          expiresIn: process.env.EXPIRE,
+          issuer: process.env.ISSUER,
+        };
+        const token = jwt.sign(
+          { _id: result.id, role: result._role },
+          process.env.TOKEN_SECRET,
+          options
+        );
         res.header("auth-token", token);
         response(res, null, { token: token }, 200, true);
       }

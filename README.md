@@ -13,6 +13,7 @@ Jodemy backend is a server side for jodemy app in website or for jodemy app in m
 2. Node_modules
 3. <a href="https://www.getpostman.com/">Postman</a>
 4. Web Server (ex. localhost)
+5. <a href="https://documenter.getpostman.com/view/15090308/TzCTaRTD">Documentation</a>
 
 ## How to run the app ?
 

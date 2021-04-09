@@ -2,28 +2,49 @@ const Router = require("express").Router();
 const classHandler = require("../handlers/class");
 const verifyToken = require("../middlewares/verifyToken");
 //-------------------------------Student
-Router.get("/myClass", verifyToken, classHandler.getMyClass);
-Router.get("/newClass", verifyToken, classHandler.getNewClass);
+Router.get("/myClass", verifyToken.student, classHandler.getMyClass);
+Router.get("/newClass", verifyToken.student, classHandler.getNewClass);
 Router.get(
   "/subjectClass/:id_class",
-  verifyToken,
+  verifyToken.student,
   classHandler.getSubjectClass
 );
-Router.post("/register", classHandler.registerClass);
+Router.post("/register", verifyToken.student, classHandler.registerClass);
 //-------------------------------FACILITATOR
-Router.get("/list", classHandler.getAllClassAndStudent);
-Router.get("/members/:id_class", classHandler.getMemberClass);
+Router.get(
+  "/list",
+  verifyToken.facilitator,
+  classHandler.getAllClassAndStudent
+);
+Router.get(
+  "/members/:id_class",
+  verifyToken.facilitator,
+  classHandler.getMemberClass
+);
 Router.get(
   "/members/subject/:id_account.:id_class",
+  verifyToken.facilitator,
   classHandler.getMemberSubjectClass
 );
-Router.post("/", classHandler.createClass);
-Router.post("/subject", classHandler.createSubjectClass);
-Router.patch("/:id_class", classHandler.updateClass);
-Router.patch("/subject/:id_subject", classHandler.updateSubjectClass);
-Router.patch("/addScore", classHandler.updateScore);
-Router.delete("/:id_class", classHandler.deleteClass);
-Router.delete("/subject/:id_subject", classHandler.deleteSubjectClass);
+Router.post("/", verifyToken.facilitator, classHandler.createClass);
+Router.post(
+  "/subject",
+  verifyToken.facilitator,
+  classHandler.createSubjectClass
+);
+Router.patch("/:id_class", verifyToken.facilitator, classHandler.updateClass);
+Router.patch(
+  "/subject/:id_subject",
+  verifyToken.facilitator,
+  classHandler.updateSubjectClass
+);
+Router.patch("/addScore", verifyToken.facilitator, classHandler.updateScore);
+Router.delete("/:id_class", verifyToken.facilitator, classHandler.deleteClass);
+Router.delete(
+  "/subject/:id_subject",
+  verifyToken.facilitator,
+  classHandler.deleteSubjectClass
+);
 //===============PUBLIC===================
 Router.get("/", classHandler.getAllClass);
 module.exports = Router;
