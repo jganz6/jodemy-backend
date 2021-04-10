@@ -8,7 +8,6 @@ const allRole = (req, res, next) => {
     };
     const verified = jwt.verify(token, process.env.TOKEN_SECRET, options);
     req.user = verified;
-    console.log(req.user);
     next();
   } catch (err) {
     res.status(400).send(`Invalid Token`);
@@ -23,14 +22,16 @@ const student = (req, res, next) => {
     };
     const verified = jwt.verify(token, process.env.TOKEN_SECRET, options);
     req.user = verified;
-    console.log(req.user);
-    if (req.user._role === 0) {
+    if (req.user._role === "0") {
       next();
     } else {
       return res.status(403).send(`Forbiden Access`);
     }
   } catch (err) {
-    res.status(400).send(`Invalid Token`);
+    if (err.name === "TokenExpiredError") {
+      return res.status(400).send("Expired Token");
+    }
+    res.status(400).send("Invalid Token");
   }
 };
 const facilitator = (req, res, next) => {
@@ -42,8 +43,7 @@ const facilitator = (req, res, next) => {
     };
     const verified = jwt.verify(token, process.env.TOKEN_SECRET, options);
     req.user = verified;
-    console.log(req.user);
-    if (req.user._role === 1) {
+    if (req.user._role === "1") {
       next();
     } else {
       return res.status(403).send(`Forbiden Access`);

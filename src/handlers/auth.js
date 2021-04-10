@@ -24,7 +24,7 @@ const postLogin = async (req, res) => {
           issuer: process.env.ISSUER,
         };
         const token = jwt.sign(
-          { _id: result.id, role: result._role },
+          { _id: result.id, _role: result.role },
           process.env.TOKEN_SECRET,
           options
         );
@@ -34,7 +34,7 @@ const postLogin = async (req, res) => {
     }
   } catch (err) {
     if (err)
-      response(res, null, { error: "Wrong Email or Password" }, 400, false);
+      response(res, "Failed", { error: "Wrong Email or Password" }, 400, false);
   }
 };
 const postResetPassword = async (req, res) => {
