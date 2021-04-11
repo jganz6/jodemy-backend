@@ -54,8 +54,12 @@ const getAllClassAndStudent = async (req, res) => {
 };
 const getMyClass = async (req, res) => {
   const { query, baseUrl, path, hostname, protocol } = req;
-  const { search, sort } = req.query;
-  const qsValue = [searchValue(search), req.user._id, ...sortBy(sort)];
+  const { search, sort, filter } = req.query;
+  const qsValue = [
+    ...searchValue(search, filter),
+    req.user._id,
+    ...sortBy(sort),
+  ];
   try {
     const finalResult = await classModel.getMyClass(qsValue, req.query);
     const { result, count, page, limit } = finalResult;
@@ -87,8 +91,12 @@ const getMyClass = async (req, res) => {
 };
 const getNewClass = async (req, res) => {
   const { query, baseUrl, path, hostname, protocol } = req;
-  const { search, sort } = req.query;
-  const qsValue = [searchValue(search), req.user._id, ...sortBy(sort)];
+  const { search, sort, filter } = req.query;
+  const qsValue = [
+    ...searchValue(search, filter),
+    req.user._id,
+    ...sortBy(sort),
+  ];
   try {
     const finalResult = await classModel.getNewClass(qsValue, req.query);
     const { result, count, page, limit } = finalResult;

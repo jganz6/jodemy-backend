@@ -76,7 +76,7 @@ const getAllClassAndStudent = (id_account, query) => {
 const getMyClass = (qsValue, query) => {
   return new Promise((resolve, reject) => {
     //SELECT DISTINCT(score_subject_report.id_class),AVG(score_subject_report.score) AS SCORE FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on class.id_class = class_subject.id_class where score_subject_report.id_account = 1 GROUP BY id_class
-    const qs = `SELECT DISTINCT(score_subject_report.id_class),AVG(score_subject_report.score) as score, (count(score_subject_report.score)/count(score_subject_report.id_subject)*100) as progress FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class where class.class_name like ? and score_subject_report.id_account = ? GROUP BY score_subject_report.id_class ORDER by ? ?`;
+    const qs = `SELECT DISTINCT(score_subject_report.id_class),AVG(score_subject_report.score) as score, (count(score_subject_report.score)/count(score_subject_report.id_subject)*100) as progress FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class where class.class_name like ? ? ?and score_subject_report.id_account = ? GROUP BY score_subject_report.id_class ORDER by ? ?`;
     // const qs = `SELECT class.*, AVG(score_subject_report.score) AS SCORE FROM score_subject_report INNER JOIN class on class.id_class=score_subject_report.id_class WHERE class.class_name LIKE ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_class) FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on class.id_class = class_subject.id_class where score_subject_report.id_account = ? GROUP BY id_class) GROUP BY class.id_class ORDER by ? ?`;
     const paginate = "LIMIT ? OFFSET ?";
     const qsWithPaginate = qs.concat(" ", paginate);
@@ -92,7 +92,7 @@ const getMyClass = (qsValue, query) => {
           reject(err);
         } else {
           const qsCount =
-            "SELECT count(DISTINCT(score_subject_report.id_class)) as count FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class where class.class_name like ? and score_subject_report.id_account = ? ORDER by ? ?";
+            "SELECT count(DISTINCT(score_subject_report.id_class)) as count FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class where class.class_name like ? ? ?and score_subject_report.id_account = ? ORDER by ? ?";
           // escaped character (\) => sehingga tanda yang digunakan sebagai syntax muncul sebagai string
           dbMySql.query(qsCount, qsValue, (err, data) => {
             if (err) return reject(err);
@@ -112,7 +112,7 @@ const getMyClass = (qsValue, query) => {
 };
 const getNewClass = (qsValue, query) => {
   return new Promise((resolve, reject) => {
-    const qs = `SELECT * FROM class WHERE class_name LIKE ? and id_class not IN(SELECT DISTINCT(score_subject_report.id_class)FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class WHERE score_subject_report.id_account = ? GROUP BY class.id_class)ORDER BY ? ?`;
+    const qs = `SELECT * FROM class WHERE class_name LIKE ? ? ?and id_class not IN(SELECT DISTINCT(score_subject_report.id_class)FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class WHERE score_subject_report.id_account = ? GROUP BY class.id_class)ORDER BY ? ?`;
     const paginate = "LIMIT ? OFFSET ?";
     const qsWithPaginate = qs.concat(" ", paginate);
     const limit = Number(query.limit) || 3;
@@ -126,7 +126,7 @@ const getNewClass = (qsValue, query) => {
           console.log(err);
           reject(err);
         } else {
-          const qsCount = `SELECT count(*) as count FROM class WHERE class_name LIKE ? and id_class not IN(SELECT DISTINCT(score_subject_report.id_class)FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class WHERE score_subject_report.id_account = ?)ORDER BY ? ?`;
+          const qsCount = `SELECT count(*) as count FROM class WHERE class_name LIKE ? ? ?and id_class not IN(SELECT DISTINCT(score_subject_report.id_class)FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class WHERE score_subject_report.id_account = ?)ORDER BY ? ?`;
           dbMySql.query(qsCount, qsValue, (err, data) => {
             if (err) return reject(err);
             const { count } = data[0];
