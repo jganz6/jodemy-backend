@@ -25,6 +25,19 @@ Jodemy backend is a server side for jodemy app in website or for jodemy app in m
 6. Choose HTTP Method and enter request url.(ex. localhost:8080/)
 7. You can see all the end point [here](#end-point)
 
+## Set-Up ENV file
+
+```ENV
+PORT = 8000
+DB_HOST = localhost
+DB_USER = root
+DB_PASSWORD = database_password
+DB_DATABASE = database_name
+TOKEN_SECRET = SECRET_KEY
+EXPIRE= (time)
+ISSUER="issuer"
+```
+
 ## End Point
 
 **1. POST**
