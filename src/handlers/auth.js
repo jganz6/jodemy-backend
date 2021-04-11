@@ -3,11 +3,20 @@ const response = require("../helpers/response");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
+const postLogout = async (req, res) => {
+  const token = req.header("auth-token");
+  try {
+    const result = await authModel.postLogout(token);
+    response(res, "Success", result, 200, true);
+  } catch (err) {
+    response(res, "Failed", { err }, 400, false);
+  }
+};
+
 const postLogin = async (req, res) => {
   const { email, password } = req.body;
   try {
     const result = await authModel.postValidation(email);
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
     if (result) {
       const validPass = await bcrypt.compare(password, result.password);
       if (!validPass) {
@@ -75,11 +84,6 @@ const postRegister = async (req, res) => {
       hashPassword,
       username,
     ]);
-    const headers = {
-      "Access-Control-Allow-Origin": "http://localhost:3000",
-      // "x-access-token": "token",
-    };
-    res.header(headers);
     response(res, null, { resultFinal }, 200, true);
   }
 };
@@ -88,4 +92,5 @@ module.exports = {
   postLogin,
   postResetPassword,
   postRegister,
+  postLogout,
 };

@@ -1,8 +1,14 @@
 const jwt = require(`jsonwebtoken`);
-const allRole = (req, res, next) => {
+const authModel = require(`./../models/auth`);
+const response = require(`./../helpers/response`);
+const allRole = async (req, res, next) => {
   const token = req.header(`auth-token`);
-  if (!token) return res.status(401).send(`Access Denied`);
+  if (!token) return response(res, "Access denied", {}, 401, false);
   try {
+    const check = await authModel.isLogout(token);
+    if (check.length > 0) {
+      return response(res, "Token has Logout", {}, 400, false);
+    }
     const options = {
       issuer: process.env.ISSUER,
     };
@@ -10,13 +16,20 @@ const allRole = (req, res, next) => {
     req.user = verified;
     next();
   } catch (err) {
-    res.status(400).send(`Invalid Token`);
+    if (err.name === "TokenExpiredError") {
+      return response(res, "Expired Token", {}, 400, false);
+    }
+    response(res, "Invalid Token", {}, 400, false);
   }
 };
-const student = (req, res, next) => {
+const student = async (req, res, next) => {
   const token = req.header(`auth-token`);
-  if (!token) return res.status(401).send(`Access Denied`);
+  if (!token) return response(res, "Access denied", {}, 401, false);
   try {
+    const check = await authModel.isLogout(token);
+    if (check.length > 0) {
+      return response(res, "Token has Logout", {}, 400, false);
+    }
     const options = {
       issuer: process.env.ISSUER,
     };
@@ -25,19 +38,23 @@ const student = (req, res, next) => {
     if (req.user._role === "0") {
       next();
     } else {
-      return res.status(403).send(`Forbiden Access`);
+      return response(res, "Forbiden Access", {}, 403, false);
     }
   } catch (err) {
     if (err.name === "TokenExpiredError") {
-      return res.status(400).send("Expired Token");
+      return response(res, "Expired Token", {}, 400, false);
     }
-    res.status(400).send("Invalid Token");
+    response(res, "Invalid Token", {}, 400, false);
   }
 };
-const facilitator = (req, res, next) => {
+const facilitator = async (req, res, next) => {
   const token = req.header(`auth-token`);
-  if (!token) return res.status(401).send(`Access Denied`);
+  if (!token) return response(res, "Access denied", {}, 401, false);
   try {
+    const check = await authModel.isLogout(token);
+    if (check.length > 0) {
+      return response(res, "Token has Logout", {}, 400, false);
+    }
     const options = {
       issuer: process.env.ISSUER,
     };
@@ -46,10 +63,13 @@ const facilitator = (req, res, next) => {
     if (req.user._role === "1") {
       next();
     } else {
-      return res.status(403).send(`Forbiden Access`);
+      return response(res, "Forbiden Access", {}, 403, false);
     }
   } catch (err) {
-    res.status(400).send(`Invalid Token`);
+    if (err.name === "TokenExpiredError") {
+      return response(res, "Expired Token", {}, 400, false);
+    }
+    response(res, "Invalid Token", {}, 400, false);
   }
 };
 module.exports = {

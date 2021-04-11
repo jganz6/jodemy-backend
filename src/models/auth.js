@@ -45,8 +45,34 @@ const postRegister = (qsValue) => {
     });
   });
 };
+const postLogout = (qsValue) => {
+  return new Promise((resolve, reject) => {
+    const qs = `INSERT INTO user_logs (token) VALUES(?)`;
+    dbMySql.query(qs, qsValue, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};
+const isLogout = (qsValue) => {
+  return new Promise((resolve, reject) => {
+    const qs = `SELECT token FROM user_logs WHERE token=?`;
+    dbMySql.query(qs, qsValue, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};
 module.exports = {
   postResetPassword,
   postValidation,
   postRegister,
+  postLogout,
+  isLogout,
 };
