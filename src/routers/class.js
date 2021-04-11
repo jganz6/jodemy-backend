@@ -1,6 +1,7 @@
 const Router = require("express").Router();
 const classHandler = require("../handlers/class");
 const verifyToken = require("../middlewares/verifyToken");
+const multerUploadImage = require("../middlewares/uploadImages");
 //-------------------------------Student
 Router.get("/myClass", verifyToken.student, classHandler.getMyClass);
 Router.get("/newClass", verifyToken.student, classHandler.getNewClass);
@@ -26,13 +27,23 @@ Router.get(
   verifyToken.facilitator,
   classHandler.getMemberSubjectClass
 );
-Router.post("/", verifyToken.facilitator, classHandler.createClass);
+Router.post(
+  "/",
+  verifyToken.facilitator,
+  multerUploadImage.single("image"),
+  classHandler.createClass
+);
 Router.post(
   "/subject",
   verifyToken.facilitator,
   classHandler.createSubjectClass
 );
-Router.patch("/:id_class", verifyToken.facilitator, classHandler.updateClass);
+Router.patch(
+  "/:id_class",
+  verifyToken.facilitator,
+  multerUploadImage.single("image"),
+  classHandler.updateClass
+);
 Router.patch(
   "/subject/:id_subject",
   verifyToken.facilitator,

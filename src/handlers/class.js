@@ -265,6 +265,12 @@ const createClass = async (req, res) => {
     start_time,
     end_time,
   } = req.body;
+  let class_logo = null;
+  if (req.file) {
+    const { file } = req;
+    const url = `/images/${file.filename}`;
+    class_logo = url;
+  }
   try {
     const result = await classModel.createClass([
       req.user._id,
@@ -276,6 +282,7 @@ const createClass = async (req, res) => {
       schedule,
       start_time,
       end_time,
+      class_logo,
     ]);
     response(res, null, [result], 200, true);
   } catch (err) {
@@ -302,12 +309,18 @@ const deleteSubjectClass = async (req, res) => {
   }
 };
 const updateClass = async (req, res) => {
-  const updateValue = req.body;
+  let updateValue = req.body;
+  if (req.file) {
+    const { file } = req;
+    const url = `/images/${file.filename}`;
+    const class_logo = url;
+    updateValue = { ...updateValue, class_logo };
+  }
   try {
-    const result = await classModel.updateClass([
+    const result = await classModel.updateClass(
       updateValue,
-      req.params.id_class,
-    ]);
+      req.params.id_class
+    );
     response(res, null, [result], 200, true);
   } catch (error) {
     console.log(error);

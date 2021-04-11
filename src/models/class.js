@@ -28,7 +28,7 @@ const registerClass = (qsValue) => {
 };
 const createClass = (qsValue) => {
   return new Promise((resolve, reject) => {
-    const qs = `INSERT INTO class (id_facilitator,class_name, category, level, description, pricing, schedule, start_time, end_time) VALUES (?,?,?,?,?,?,?,?,?)`;
+    const qs = `INSERT INTO class (id_facilitator,class_name, category, level, description, pricing, schedule, start_time, end_time, class_logo) VALUES (?,?,?,?,?,?,?,?,?,?)`;
     dbMySql.query(qs, qsValue, (err, result) => {
       if (err) {
         reject(err);
@@ -315,10 +315,10 @@ const deleteSubjectClass = (qsValue) => {
     });
   });
 };
-const updateClass = (qsValue) => {
+const updateClass = (qsValue, id) => {
   return new Promise((resolve, reject) => {
     const qs = `UPDATE class SET ? WHERE id_class = ?`;
-    dbMySql.query(qs, qsValue, (err, result) => {
+    dbMySql.query(qs, [qsValue, id], (err, result) => {
       if (err) {
         reject(err);
       } else {
