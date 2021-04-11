@@ -38,9 +38,10 @@ const createClass = (qsValue) => {
     });
   });
 };
-const getAllClassAndStudent = (id_account, query) => {
+const getAllClassAndStudent = (qsValue, query) => {
   return new Promise((resolve, reject) => {
-    const qs = `SELECT class.*, COUNT(DISTINCT(score_subject_report.id_account)) AS Student FROM score_subject_report INNER JOIN class on class.id_class=score_subject_report.id_class WHERE class.id_facilitator = ? and score_subject_report.id_class in(SELECT DISTINCT(id_class) FROM score_subject_report) GROUP by class.id_class`;
+    const qs = `SELECT class.*, COUNT(DISTINCT(score_subject_report.id_account)) AS Student FROM class LEFT OUTER JOIN score_subject_report on score_subject_report.id_class=class.id_class WHERE class.class_name like ? ? ?and class.id_facilitator = ? GROUP by class.id_class ORDER by ? ?`;
+    // const qs = `SELECT class.*, COUNT(DISTINCT(score_subject_report.id_account)) AS Student FROM score_subject_report INNER JOIN class on class.id_class=score_subject_report.id_class WHERE class.class_name like ? ? ?and class.id_facilitator = ? and score_subject_report.id_class in(SELECT DISTINCT(id_class) FROM score_subject_report) GROUP by class.id_class ORDER BY ? ?`;
     const paginate = "LIMIT ? OFFSET ?";
     const qsWithPaginate = qs.concat(" ", paginate);
     const limit = Number(query.limit) || 3;
@@ -48,16 +49,16 @@ const getAllClassAndStudent = (id_account, query) => {
     const offset = (page - 1) * limit;
     dbMySql.query(
       qsWithPaginate,
-      [id_account, limit, offset],
+      [...qsValue, limit, offset],
       (err, result) => {
         if (err) {
           console.log(err);
           reject(err);
         } else {
           const qsCount =
-            "SELECT COUNT(DISTINCT(class.id_class)) AS count FROM score_subject_report INNER JOIN class on class.id_class=score_subject_report.id_class WHERE class.id_facilitator = ? and score_subject_report.id_class in(SELECT DISTINCT(id_class) FROM score_subject_report)";
+            "SELECT COUNT(DISTINCT(class.id_class)) AS count FROM class LEFT OUTER JOIN score_subject_report on score_subject_report.id_class=class.id_class WHERE class.class_name like ? ? ?and class.id_facilitator = ? ORDER by ? ?";
           // escaped character (\) => sehingga tanda yang digunakan sebagai syntax muncul sebagai string
-          dbMySql.query(qsCount, id_account, (err, data) => {
+          dbMySql.query(qsCount, qsValue, (err, data) => {
             if (err) return reject(err);
             const { count } = data[0];
             let finalResult = {

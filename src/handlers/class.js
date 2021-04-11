@@ -25,9 +25,16 @@ const registerClass = async (req, res) => {
 };
 const getAllClassAndStudent = async (req, res) => {
   const { query, baseUrl, path, hostname, protocol } = req;
+  const { search, sort, filter } = req.query;
+  const qsValue = [
+    ...searchValue(search, filter),
+    req.user._id,
+    ...sortBy(sort),
+  ];
+  console.log(qsValue);
   try {
     const finalResult = await classModel.getAllClassAndStudent(
-      req.user._id,
+      qsValue,
       req.query
     );
     const { result, count, page, limit } = finalResult;
@@ -35,11 +42,19 @@ const getAllClassAndStudent = async (req, res) => {
     const url =
       protocol + "://" + hostname + ":" + process.env.PORT + baseUrl + path;
     const prev =
-      page === 1 ? null : url + `?page=${page - 1}&limit=${query.limit || 3}`;
+      page === 1
+        ? null
+        : url +
+          `?${search ? `&search=${search}` : ""}${sort ? `&sort=${sort}` : ""}${
+            filter ? `&filter=${filter}` : ""
+          }&page=${page - 1}&limit=${query.limit || 3}`;
     const next =
       page === totalPage
         ? null
-        : url + `?&page=${page + 1}&limit=${query.limit || 3}`;
+        : url +
+          `?${search ? `&search=${search}` : ""}${sort ? `&sort=${sort}` : ""}${
+            filter ? `&filter=${filter}` : ""
+          }&page=${page + 1}&limit=${query.limit || 3}`;
     const info = {
       count,
       page,
@@ -70,12 +85,16 @@ const getMyClass = async (req, res) => {
       page === 1
         ? null
         : url +
-          `?search=&sort=${sort}&page=${page - 1}&limit=${query.limit || 3}`;
+          `?${search ? `&search=${search}` : ""}${sort ? `&sort=${sort}` : ""}${
+            filter ? `&filter=${filter}` : ""
+          }&page=${page - 1}&limit=${query.limit || 3}`;
     const next =
       page === totalPage
         ? null
         : url +
-          `?search=&sort=${sort}&page=${page + 1}&limit=${query.limit || 3}`;
+          `?${search ? `&search=${search}` : ""}${sort ? `&sort=${sort}` : ""}${
+            filter ? `&filter=${filter}` : ""
+          }&page=${page + 1}&limit=${query.limit || 3}`;
     const info = {
       count,
       page,
@@ -107,12 +126,16 @@ const getNewClass = async (req, res) => {
       page === 1
         ? null
         : url +
-          `?search=&sort=${sort}&page=${page - 1}&limit=${query.limit || 3}`;
+          `?${search ? `&search=${search}` : ""}${sort ? `&sort=${sort}` : ""}${
+            filter ? `&filter=${filter}` : ""
+          }&page=${page - 1}&limit=${query.limit || 3}`;
     const next =
       page === totalPage
         ? null
         : url +
-          `?search=&sort=${sort}&page=${page + 1}&limit=${query.limit || 3}`;
+          `?${search ? `&search=${search}` : ""}${sort ? `&sort=${sort}` : ""}${
+            filter ? `&filter=${filter}` : ""
+          }&page=${page + 1}&limit=${query.limit || 3}`;
     const info = {
       count,
       page,
