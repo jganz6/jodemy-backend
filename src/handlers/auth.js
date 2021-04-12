@@ -3,6 +3,8 @@ const response = require("../helpers/response");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const generatorOTP = require("../helpers/generatorOTP");
+const { transporter } = require("./../helpers/transporter");
+const nodemailer = require("nodemailer");
 
 const postLogout = async (req, res) => {
   const token = req.header("auth-token");
@@ -22,6 +24,22 @@ const sendOTP = async (req, res) => {
       await authModel.updateOTP([otp, result.id]);
       response(res, null, { ...result.id }, 200, true);
       console.log(otp);
+      var mailOptions = {
+        to: "jenie.selina@gmail.com",
+        subject: "Otp for registration is: ",
+        html:
+          "<h3>OTP for account verification is </h3>" +
+          "<h1 style='font-weight:bold;'>" +
+          otp +
+          "</h1>", // html body
+      };
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          return console.log(error);
+        }
+        console.log("Message sent: %s", info.messageId);
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+      });
       setTimeout(async () => {
         await authModel.updateOTP([null, result.id]);
         console.log("timeout OTP");
