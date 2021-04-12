@@ -33,6 +33,39 @@ const postResetPassword = (qsValue) => {
     });
   });
 };
+const verifyOTP = (qsValue) => {
+  return new Promise((resolve, reject) => {
+    const qs = `SELECT id_account, email FROM tb_account WHERE otp=? and id_account=?`;
+    dbMySql.query(qs, qsValue, (err, result) => {
+      if (err) {
+        reject(err);
+      } else if (result.length === 0) {
+        reject("Unauthorized OTP");
+      } else {
+        resolve(
+          (result = {
+            id: `${result[0].id_account}`,
+            email: `${result[0].email}`,
+          })
+        );
+      }
+    });
+  });
+};
+const updateOTP = (qsValue) => {
+  return new Promise((resolve, reject) => {
+    const qs = `UPDATE tb_account SET otp = ? WHERE id_account = ?`;
+    dbMySql.query(qs, qsValue, (err, result) => {
+      if (err) {
+        reject(err);
+      } else if (result.length === 0) {
+        reject(result);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};
 const postRegister = (qsValue) => {
   return new Promise((resolve, reject) => {
     const qs = `INSERT INTO tb_account (email, password, username) VALUES(? , ? , ?)`;
@@ -75,4 +108,6 @@ module.exports = {
   postRegister,
   postLogout,
   isLogout,
+  updateOTP,
+  verifyOTP,
 };
