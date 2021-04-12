@@ -28,14 +28,14 @@ Jodemy backend is a server side for jodemy app in website or for jodemy app in m
 ## Set-Up ENV file
 
 ```ENV
-PORT = 8000
-DB_HOST = localhost
-DB_USER = root
-DB_PASSWORD = database_password
-DB_DATABASE = database_name
-TOKEN_SECRET = SECRET_KEY
-EXPIRE= (time)
-ISSUER="issuer"
+PORT = port
+DB_HOST = "HOST"
+DB_USER = "USER"
+DB_PASSWORD = "PASSWORD"
+DB_DATABASE = "DATABASE_NAME"
+TOKEN_SECRET = "SECRET_KEY"
+EXPIRE= (time in ms)
+ISSUER="ISSUER"
 ```
 
 ## End Point
