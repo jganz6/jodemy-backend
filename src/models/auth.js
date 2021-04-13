@@ -35,7 +35,7 @@ const postResetPassword = (qsValue) => {
 };
 const verifyOTP = (qsValue) => {
   return new Promise((resolve, reject) => {
-    const qs = `SELECT id_account, email FROM tb_account WHERE otp=? and id_account=?`;
+    const qs = `SELECT id_account, role FROM tb_account WHERE otp=? and id_account=?`;
     dbMySql.query(qs, qsValue, (err, result) => {
       if (err) {
         reject(err);
@@ -45,7 +45,7 @@ const verifyOTP = (qsValue) => {
         resolve(
           (result = {
             id: `${result[0].id_account}`,
-            email: `${result[0].email}`,
+            role: `${result[0].role}`,
           })
         );
       }

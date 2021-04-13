@@ -25,7 +25,7 @@ const sendOTP = async (req, res) => {
       response(res, null, { ...result.id }, 200, true);
       console.log(otp);
       var mailOptions = {
-        to: "jenie.selina@gmail.com",
+        to: "nat77029@gmail.com",
         subject: "Otp for registration is: ",
         html:
           "<h3>OTP for account verification is </h3>" +
@@ -54,7 +54,17 @@ const verifyOTP = async (req, res) => {
   try {
     const result = await authModel.verifyOTP([otp, id]);
     if (result) {
-      response(res, null, { ...result.email }, 200, true);
+      const options = {
+        expiresIn: process.env.EXPIRE,
+        issuer: process.env.ISSUER,
+      };
+      const token = jwt.sign(
+        { _id: result.id, _role: result.role },
+        process.env.TOKEN_SECRET,
+        options
+      );
+      res.header("auth-token", token);
+      response(res, null, { token: token }, 200, true);
     }
   } catch (err) {
     response(res, "Failed Authorized", { err }, 403, false);
@@ -94,18 +104,15 @@ const postLogin = async (req, res) => {
   }
 };
 const postResetPassword = async (req, res) => {
-  const { email, newPassword } = req.body;
+  const { newPassword } = req.body;
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(newPassword, salt);
   try {
-    const result = await authModel.postValidation(email);
-    if (result) {
-      const resultFinal = await authModel.postResetPassword([
-        hashPassword,
-        result.id,
-      ]);
-      response(res, null, { resultFinal }, 200, true);
-    }
+    const resultFinal = await authModel.postResetPassword([
+      hashPassword,
+      req.user._id,
+    ]);
+    response(res, null, { resultFinal }, 200, true);
   } catch (err) {
     response(res, "Error", { err }, 400, false);
   }

@@ -7,7 +7,7 @@ const allRole = async (req, res, next) => {
   try {
     const check = await authModel.isLogout(token);
     if (check.length > 0) {
-      return response(res, "Token has Logout", {}, 400, false);
+      return response(res, "Token has Logout", {}, 403, false);
     }
     const options = {
       issuer: process.env.ISSUER,
@@ -28,7 +28,7 @@ const student = async (req, res, next) => {
   try {
     const check = await authModel.isLogout(token);
     if (check.length > 0) {
-      return response(res, "Token has Logout", {}, 400, false);
+      return response(res, "Token has Logout", {}, 403, false);
     }
     const options = {
       issuer: process.env.ISSUER,
@@ -53,7 +53,7 @@ const facilitator = async (req, res, next) => {
   try {
     const check = await authModel.isLogout(token);
     if (check.length > 0) {
-      return response(res, "Token has Logout", {}, 400, false);
+      return response(res, "Token has Logout", {}, 403, false);
     }
     const options = {
       issuer: process.env.ISSUER,
