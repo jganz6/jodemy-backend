@@ -49,7 +49,11 @@ Router.patch(
   verifyToken.facilitator,
   classHandler.updateSubjectClass
 );
-Router.patch("/addScore", verifyToken.facilitator, classHandler.updateScore);
+Router.patch(
+  "/addScore/:id_account",
+  verifyToken.facilitator,
+  classHandler.updateScore
+);
 Router.delete("/:id_class", verifyToken.facilitator, classHandler.deleteClass);
 Router.delete(
   "/subject/:id_subject",

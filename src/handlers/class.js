@@ -344,7 +344,7 @@ const updateScore = async (req, res) => {
   try {
     const result = await classModel.updateScore([
       score,
-      req.query.id,
+      req.params.id_account,
       id_subject,
     ]);
     response(res, null, [result], 200, true);
