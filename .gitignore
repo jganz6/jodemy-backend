@@ -1,3 +1,4 @@
 /node_modules
 /.env
 /.eslintrc.js
+/db_jodemy_backups
