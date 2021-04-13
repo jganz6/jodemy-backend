@@ -13,17 +13,30 @@ Jodemy backend is a server side for jodemy app in website or for jodemy app in m
 2. Node_modules
 3. <a href="https://www.getpostman.com/">Postman</a>
 4. Web Server (ex. localhost)
-5. <a href="https://documenter.getpostman.com/view/15090308/TzCTaRTD">Documentation</a>
+5. JWT
+6. CORS
+7. MULTER
+8. PAGINATION
+9. HASH Password
+10. SEARCH, SORT, FILTER
+11. <a href="https://documenter.getpostman.com/view/15090308/TzCTaRTD">Documentation</a>
 
 ## How to run the app ?
 
 1. Open app's directory in CMD or Terminal
-2. Type `npm install`
-3. Make new file a called **.env**, set up first [here](#set-up-env-file)
-4. Turn on Web Server and MySQL can using Third-party tool like xampp, etc.
-5. Open Postman desktop application or Chrome web app extension that has installed before
-6. Choose HTTP Method and enter request url.(ex. localhost:8080/)
-7. You can see all the end point [here](#end-point)
+2. clone repository use HTTPS :https://github.com/jganz6/jodemy-backend.git
+3. install `nodejs`
+4. Type `npm install`
+5. set up your database following this [erd](#erd-database)
+6. Make new file a called **.env**, set up first [here](#set-up-env-file)
+7. Turn on Web Server and MySQL can using Third-party tool like xampp, etc.
+8. Open Postman desktop application or Chrome web app extension that has installed before
+9. Choose HTTP Method and enter request url.(ex. localhost:8080/)
+10. You can see all the end point [here](#end-point)
+
+## erd-database
+
+![ERD-db_jodemy](https://user-images.githubusercontent.com/67989743/114574280-51bee780-9ca3-11eb-87f6-a3745f832fec.png)
 
 ## Set-Up ENV file
 

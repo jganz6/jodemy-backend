@@ -13,6 +13,7 @@ const getUsersInfo = async (req, res) => {
 const updateAccount = async (req, res) => {
   let updateValue = req.body;
   try {
+    console.log(req.file);
     if (req.file) {
       const { file } = req;
       const url = `/images/${file.filename}`;
