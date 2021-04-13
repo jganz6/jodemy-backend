@@ -31,7 +31,8 @@ const sendOTP = async (req, res) => {
           "<h3>OTP for account verification is </h3>" +
           "<h1 style='font-weight:bold;'>" +
           otp +
-          "</h1>", // html body
+          "</h1>" +
+          "<h4>expired in 2 minutes</h4>", // html body
       };
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
