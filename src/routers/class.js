@@ -57,5 +57,5 @@ Router.delete(
   classHandler.deleteSubjectClass
 );
 //===============PUBLIC===================
-Router.get("/", classHandler.getAllClass);
+Router.get("/", verifyToken.allRole, classHandler.getAllClass);
 module.exports = Router;

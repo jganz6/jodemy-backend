@@ -36,6 +36,8 @@ DB_DATABASE = "DATABASE_NAME"
 TOKEN_SECRET = "SECRET_KEY"
 EXPIRE= (time in ms)
 ISSUER="ISSUER"
+ADMIN_USER="email"
+ADMIN_PASSWORD="password"
 ```
 
 ## End Point
