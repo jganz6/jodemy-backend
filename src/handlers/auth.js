@@ -25,7 +25,7 @@ const sendOTP = async (req, res) => {
       response(res, null, { ...result.id }, 200, true);
       console.log(otp);
       var mailOptions = {
-        to: "nat77029@gmail.com",
+        to: "jodiemanopo28@gmail.com",
         subject: "Otp for registration is: ",
         html:
           "<h3>OTP for account verification is </h3>" +
