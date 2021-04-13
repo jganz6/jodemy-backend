@@ -36,7 +36,9 @@ Jodemy backend is a server side for jodemy app in website or for jodemy app in m
 
 ## erd-database
 
-![ERD-db_jodemy](https://user-images.githubusercontent.com/67989743/114574280-51bee780-9ca3-11eb-87f6-a3745f832fec.png)
+---
+
+![ERD-db_jodemy](https://user-images.githubusercontent.com/67989743/114575482-66e84600-9ca4-11eb-8a39-dad893c3126a.png)
 
 ## Set-Up ENV file
 
