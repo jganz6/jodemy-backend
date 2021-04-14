@@ -16,10 +16,9 @@ Jodemy backend is a server side for jodemy app in website or for jodemy app in m
 5. JWT
 6. CORS
 7. MULTER
-8. PAGINATION
-9. HASH Password
-10. SEARCH, SORT, FILTER
-11. <a href="https://documenter.getpostman.com/view/15090308/TzCTaRTD">Documentation</a>
+8. BCRYPTJS
+9. NODEMAILER
+10. <a href="https://documenter.getpostman.com/view/15090308/TzCTaRTD">Documentation</a>
 
 ## How to run the app ?
 
