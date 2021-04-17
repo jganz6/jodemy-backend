@@ -21,7 +21,18 @@ const registerClass = (qsValue) => {
       if (err) {
         reject(err);
       } else {
-        resolve(result);
+        const qsFinal = `SELECT DISTINCT(score_subject_report.id_class),AVG(score_subject_report.score) as score, (count(score_subject_report.score)/count(score_subject_report.id_subject)*100) as progress, class.class_name, class.category,class.description FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class where class.id_class=? and score_subject_report.id_account = ? GROUP BY score_subject_report.id_class`;
+        dbMySql.query(qsFinal, [qsValue[1], qsValue[0]], (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            let finalResult = {
+              result,
+              data,
+            };
+            resolve(finalResult);
+          }
+        });
       }
     });
   });
