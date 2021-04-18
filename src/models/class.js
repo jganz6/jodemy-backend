@@ -237,7 +237,7 @@ const getMemberClass = (qsValue, query) => {
 };
 const getMemberSubjectClass = (qsValue, query) => {
   return new Promise((resolve, reject) => {
-    const qs = `SELECT class_subject.id_subject, score_subject_report.score  FROM score_subject_report INNER JOIN class_subject on class_subject.id_subject=score_subject_report.id_subject WHERE id_account= ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_class) FROM score_subject_report inner JOIN tb_account ON score_subject_report.id_account = tb_account.id_account WHERE score_subject_report.id_class = ?)`;
+    const qs = `SELECT class_subject.*, score_subject_report.score  FROM score_subject_report INNER JOIN class_subject on class_subject.id_subject=score_subject_report.id_subject WHERE id_account= ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_class) FROM score_subject_report inner JOIN tb_account ON score_subject_report.id_account = tb_account.id_account WHERE score_subject_report.id_class = ?)`;
     const paginate = "LIMIT ? OFFSET ?";
     const qsWithPaginate = qs.concat(" ", paginate);
     const limit = Number(query.limit) || 3;
