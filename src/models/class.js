@@ -44,7 +44,18 @@ const createClass = (qsValue) => {
       if (err) {
         reject(err);
       } else {
-        resolve(result);
+        const qsFinal = `SELECT class.*, COUNT(DISTINCT(score_subject_report.id_account)) AS Student FROM class LEFT OUTER JOIN score_subject_report on score_subject_report.id_class=class.id_class WHERE class.id_class = ? GROUP by class.id_class`;
+        dbMySql.query(qsFinal, [result.insertId], (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            let finalResult = {
+              result,
+              data,
+            };
+            resolve(finalResult);
+          }
+        });
       }
     });
   });
@@ -189,6 +200,40 @@ const getSubjectClass = (qsValue, query) => {
     );
   });
 };
+const getSubjectClassFacilitator = (qsValue, query) => {
+  return new Promise((resolve, reject) => {
+    //SELECT class_subject.*, score_subject_report.score  FROM score_subject_report INNER JOIN class_subject on class_subject.id_subject=score_subject_report.id_subject WHERE id_account= ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_class) FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on class.id_class = class_subject.id_class where score_subject_report.id_account = ? GROUP BY id_class)
+    const qs = `SELECT class_subject.* FROM class_subject INNER JOIN class on class_subject.id_class=class.id_class where class.id_facilitator = ? and class.id_class=?`;
+    const paginate = "LIMIT ? OFFSET ?";
+    const qsWithPaginate = qs.concat(" ", paginate);
+    const limit = Number(query.limit) || 3;
+    const page = Number(query.page) || 1;
+    const offset = (page - 1) * limit;
+    dbMySql.query(
+      qsWithPaginate,
+      [...qsValue, limit, offset],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          const qsCount = `SELECT class_subject.* FROM class_subject INNER JOIN class on class_subject.id_class=class.id_class where class.id_facilitator = ?`;
+          dbMySql.query(qsCount, qsValue, (err, data) => {
+            if (err) return reject(err);
+            const { count } = data[0];
+            let finalResult = {
+              result,
+              count,
+              page,
+              limit,
+            };
+            resolve(finalResult);
+          });
+        }
+      }
+    );
+  });
+};
 const createSubjectClass = (qsValue) => {
   return new Promise((resolve, reject) => {
     const qs = `INSERT INTO class_subject(id_class, subject_name, subject_date) VALUES (?,?,?)`;
@@ -309,7 +354,7 @@ const deleteClass = (qsValue) => {
       if (err) {
         reject(err);
       } else {
-        resolve(result);
+        resolve({ result, id_class: qsValue });
       }
     });
   });
@@ -321,7 +366,7 @@ const deleteSubjectClass = (qsValue) => {
       if (err) {
         reject(err);
       } else {
-        resolve(result);
+        resolve({ result, id_class: qsValue });
       }
     });
   });
@@ -333,6 +378,18 @@ const updateClass = (qsValue, id) => {
       if (err) {
         reject(err);
       } else {
+        const qsFinal = `SELECT * FROM class WHERE id_class= ?`;
+        dbMySql.query(qsFinal, [id], (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            let finalResult = {
+              result,
+              data,
+            };
+            resolve(finalResult);
+          }
+        });
         resolve(result);
       }
     });
@@ -380,4 +437,5 @@ module.exports = {
   updateClass,
   updateScore,
   registerClass,
+  getSubjectClassFacilitator,
 };

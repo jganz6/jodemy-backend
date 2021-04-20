@@ -23,6 +23,11 @@ Router.get(
   classHandler.getMemberClass
 );
 Router.get(
+  "/subjectByIdFacilitator/:id_class",
+  verifyToken.facilitator,
+  classHandler.getSubjectClassFacilitator
+);
+Router.get(
   "/members/subject/:id_account.:id_class",
   verifyToken.facilitator,
   classHandler.getMemberSubjectClass
