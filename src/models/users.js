@@ -18,7 +18,15 @@ const updateAccount = (qsValue, id) => {
       if (err) {
         reject(err);
       } else {
-        resolve(result);
+        const qsUpdated =
+          "SELECT username,phone_number,role,photo_profile from tb_account WHERE id_account = ?";
+        dbMySql.query(qsUpdated, qsValue, (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve((result = { ...result, ...data }));
+          }
+        });
       }
     });
   });
