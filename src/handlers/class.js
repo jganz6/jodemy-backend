@@ -111,6 +111,7 @@ const getMyClass = async (req, res) => {
 const getNewClass = async (req, res) => {
   const { query, baseUrl, path, hostname, protocol } = req;
   const { search, sort, filter } = req.query;
+  console.log(searchValue(search, filter));
   const qsValue = [
     ...searchValue(search, filter),
     req.user._id,

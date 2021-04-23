@@ -4,7 +4,11 @@ const searchValue = (search, filter) => {
   if (filter) {
     const filterValue = filter.split("-");
     valueFill = filterValue[1];
-    filter = "AND class." + filterValue[0] + " = ";
+    if (filterValue[1] === "paid") {
+      filter = "AND class." + filterValue[0] + " <> ";
+    } else {
+      filter = "AND class." + filterValue[0] + " = ";
+    }
   } else {
     filter = "";
   }
