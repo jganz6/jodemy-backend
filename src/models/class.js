@@ -60,6 +60,42 @@ const createClass = (qsValue) => {
     });
   });
 };
+const getScheduleFacilitator = (qsValue, query) => {
+  return new Promise((resolve, reject) => {
+    const qs = `SELECT class.*, COUNT(DISTINCT(score_subject_report.id_account)) AS Student FROM class INNER JOIN class_subject on class_subject.id_class=class.id_class LEFT OUTER JOIN score_subject_report on score_subject_report.id_class=class.id_class WHERE class.class_name like ? ? ?and class.id_facilitator = ? and class_subject.subject_date = ? GROUP by class.id_class ORDER by ? ?`;
+    // const qs = `SELECT class.*, COUNT(DISTINCT(score_subject_report.id_account)) AS Student FROM score_subject_report INNER JOIN class on class.id_class=score_subject_report.id_class WHERE class.class_name like ? ? ?and class.id_facilitator = ? and score_subject_report.id_class in(SELECT DISTINCT(id_class) FROM score_subject_report) GROUP by class.id_class ORDER BY ? ?`;
+    const paginate = "LIMIT ? OFFSET ?";
+    const qsWithPaginate = qs.concat(" ", paginate);
+    const limit = Number(query.limit) || 3;
+    const page = Number(query.page) || 1;
+    const offset = (page - 1) * limit;
+    dbMySql.query(
+      qsWithPaginate,
+      [...qsValue, limit, offset],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          const qsCount =
+            "SELECT COUNT(DISTINCT(class.id_class)) AS count FROM class INNER JOIN class_subject on class_subject.id_class=class.id_class LEFT OUTER JOIN score_subject_report on score_subject_report.id_class=class.id_class WHERE class.class_name like ? ? ?and class.id_facilitator = ? and class_subject.subject_date = ? ORDER by ? ?";
+          // escaped character (\) => sehingga tanda yang digunakan sebagai syntax muncul sebagai string
+          dbMySql.query(qsCount, qsValue, (err, data) => {
+            if (err) return reject(err);
+            const { count } = data[0];
+            let finalResult = {
+              result,
+              count,
+              page,
+              limit,
+            };
+            resolve(finalResult);
+          });
+        }
+      }
+    );
+  });
+};
 const getAllClassAndStudent = (qsValue, query) => {
   return new Promise((resolve, reject) => {
     const qs = `SELECT class.*, COUNT(DISTINCT(score_subject_report.id_account)) AS Student FROM class LEFT OUTER JOIN score_subject_report on score_subject_report.id_class=class.id_class WHERE class.class_name like ? ? ?and class.id_facilitator = ? GROUP by class.id_class ORDER by ? ?`;
@@ -79,6 +115,80 @@ const getAllClassAndStudent = (qsValue, query) => {
         } else {
           const qsCount =
             "SELECT COUNT(DISTINCT(class.id_class)) AS count FROM class LEFT OUTER JOIN score_subject_report on score_subject_report.id_class=class.id_class WHERE class.class_name like ? ? ?and class.id_facilitator = ? ORDER by ? ?";
+          // escaped character (\) => sehingga tanda yang digunakan sebagai syntax muncul sebagai string
+          dbMySql.query(qsCount, qsValue, (err, data) => {
+            if (err) return reject(err);
+            const { count } = data[0];
+            let finalResult = {
+              result,
+              count,
+              page,
+              limit,
+            };
+            resolve(finalResult);
+          });
+        }
+      }
+    );
+  });
+};
+const getAllScheduleClass = (qsValue, query) => {
+  return new Promise((resolve, reject) => {
+    //SELECT DISTINCT(score_subject_report.id_class),AVG(score_subject_report.score) AS SCORE FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on class.id_class = class_subject.id_class where score_subject_report.id_account = 1 GROUP BY id_class
+    const qs = `SELECT * FROM class INNER JOIN class_subject on class.id_class = class_subject.id_class where class.class_name like ? ? ?and class_subject.subject_date = ? ORDER by ? ?`;
+    // const qs = `SELECT class.*, AVG(score_subject_report.score) AS SCORE FROM score_subject_report INNER JOIN class on class.id_class=score_subject_report.id_class WHERE class.class_name LIKE ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_class) FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on class.id_class = class_subject.id_class where score_subject_report.id_account = ? GROUP BY id_class) GROUP BY class.id_class ORDER by ? ?`;
+    const paginate = "LIMIT ? OFFSET ?";
+    const qsWithPaginate = qs.concat(" ", paginate);
+    const limit = Number(query.limit) || 3;
+    const page = Number(query.page) || 1;
+    const offset = (page - 1) * limit;
+    dbMySql.query(
+      qsWithPaginate,
+      [...qsValue, limit, offset],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          const qsCount =
+            "SELECT * FROM class INNER JOIN class_subject on class.id_class = class_subject.id_class where class.class_name like ? ? ?and class_subject.subject_date = ? ORDER by ? ?";
+          // escaped character (\) => sehingga tanda yang digunakan sebagai syntax muncul sebagai string
+          dbMySql.query(qsCount, qsValue, (err, data) => {
+            if (err) return reject(err);
+            const { count } = data[0];
+            let finalResult = {
+              result,
+              count,
+              page,
+              limit,
+            };
+            resolve(finalResult);
+          });
+        }
+      }
+    );
+  });
+};
+const getForYouClass = (qsValue, query) => {
+  return new Promise((resolve, reject) => {
+    //SELECT DISTINCT(score_subject_report.id_class),AVG(score_subject_report.score) AS SCORE FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on class.id_class = class_subject.id_class where score_subject_report.id_account = 1 GROUP BY id_class
+    const qs = `SELECT DISTINCT(score_subject_report.id_class),AVG(score_subject_report.score) as score, (count(score_subject_report.score)/count(score_subject_report.id_subject)*100) as progress, class.class_name, class.category,class.description,class.pricing,class.level FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on score_subject_report.id_subject = class_subject.id_subject where class.class_name like ? ? ?and score_subject_report.id_account = ? and class_subject.subject_date = ? GROUP BY score_subject_report.id_class ORDER by ? ?`;
+    // const qs = `SELECT class.*, AVG(score_subject_report.score) AS SCORE FROM score_subject_report INNER JOIN class on class.id_class=score_subject_report.id_class WHERE class.class_name LIKE ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_class) FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on class.id_class = class_subject.id_class where score_subject_report.id_account = ? GROUP BY id_class) GROUP BY class.id_class ORDER by ? ?`;
+    const paginate = "LIMIT ? OFFSET ?";
+    const qsWithPaginate = qs.concat(" ", paginate);
+    const limit = Number(query.limit) || 3;
+    const page = Number(query.page) || 1;
+    const offset = (page - 1) * limit;
+    dbMySql.query(
+      qsWithPaginate,
+      [...qsValue, limit, offset],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          const qsCount =
+            "SELECT count(DISTINCT(score_subject_report.id_class)) as count FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on score_subject_report.id_subject = class_subject.id_subject where class.class_name like ? ? ?and score_subject_report.id_account = ? and class_subject.subject_date = ? ORDER by ? ?";
           // escaped character (\) => sehingga tanda yang digunakan sebagai syntax muncul sebagai string
           dbMySql.query(qsCount, qsValue, (err, data) => {
             if (err) return reject(err);
@@ -317,7 +427,7 @@ const getMemberSubjectClass = (qsValue, query) => {
 };
 const getMemberId = (qsValue) => {
   return new Promise((resolve, reject) => {
-    const qs = `SELECT DISTINCT(score_subject_report.id_account), tb_account.username FROM score_subject_report inner JOIN tb_account ON score_subject_report.id_account = tb_account.id_account WHERE score_subject_report.id_class = ?`;
+    const qs = `SELECT DISTINCT(score_subject_report.id_account), tb_account.username, tb_account.photo_profile FROM score_subject_report inner JOIN tb_account ON score_subject_report.id_account = tb_account.id_account WHERE score_subject_report.id_class = ?`;
     dbMySql.query(qs, qsValue, (err, result) => {
       if (err) {
         // throw err;
@@ -420,6 +530,9 @@ const updateScore = (qsValue) => {
   });
 };
 module.exports = {
+  getAllScheduleClass,
+  getScheduleFacilitator,
+  getForYouClass,
   getAllClass,
   createClass,
   getMyClass,

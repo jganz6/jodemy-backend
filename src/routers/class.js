@@ -3,6 +3,12 @@ const classHandler = require("../handlers/class");
 const verifyToken = require("../middlewares/verifyToken");
 const multerUploadImage = require("../middlewares/uploadImages");
 //-------------------------------Student
+Router.get(
+  "/allSchedule",
+  verifyToken.student,
+  classHandler.getAllScheduleClass
+);
+Router.get("/forYouClass", verifyToken.student, classHandler.getForYouClass);
 Router.get("/myClass", verifyToken.student, classHandler.getMyClass);
 Router.get("/newClass", verifyToken.student, classHandler.getNewClass);
 Router.get(
@@ -12,6 +18,11 @@ Router.get(
 );
 Router.post("/register", verifyToken.student, classHandler.registerClass);
 //-------------------------------FACILITATOR
+Router.get(
+  "/scheduleList",
+  verifyToken.facilitator,
+  classHandler.getScheduleFacilitator
+);
 Router.get(
   "/list",
   verifyToken.facilitator,

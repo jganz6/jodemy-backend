@@ -23,6 +23,51 @@ const registerClass = async (req, res) => {
     response(res, "Failed", error, 400, false);
   }
 };
+const getScheduleFacilitator = async (req, res) => {
+  const { query, baseUrl, path, hostname, protocol } = req;
+  const { search, sort, filter, dateSub } = req.query;
+  const qsValue = [
+    ...searchValue(search, filter),
+    req.user._id,
+    dateSub,
+    ...sortBy(sort),
+  ];
+  console.log(qsValue);
+  try {
+    const finalResult = await classModel.getScheduleFacilitator(
+      qsValue,
+      req.query
+    );
+    const { result, count, page, limit } = finalResult;
+    const totalPage = Math.ceil(count / limit);
+    const url =
+      protocol + "://" + hostname + ":" + process.env.PORT + baseUrl + path;
+    const prev =
+      page === 1
+        ? null
+        : url +
+          `?${search ? `&search=${search}` : ""}${sort ? `&sort=${sort}` : ""}${
+            filter ? `&filter=${filter}` : ""
+          }&page=${page - 1}&limit=${query.limit || 3}`;
+    const next =
+      page === totalPage
+        ? null
+        : url +
+          `?${search ? `&search=${search}` : ""}${sort ? `&sort=${sort}` : ""}${
+            filter ? `&filter=${filter}` : ""
+          }&page=${page + 1}&limit=${query.limit || 3}`;
+    const info = {
+      count,
+      page,
+      totalPage,
+      next,
+      prev,
+    };
+    response(res, null, { ...[result], ...info }, 200, true);
+  } catch (error) {
+    response(res, "Failed", error, 400, false);
+  }
+};
 const getAllClassAndStudent = async (req, res) => {
   const { query, baseUrl, path, hostname, protocol } = req;
   const { search, sort, filter } = req.query;
@@ -64,6 +109,88 @@ const getAllClassAndStudent = async (req, res) => {
     };
     response(res, null, { ...[result], ...info }, 200, true);
   } catch (error) {
+    response(res, "Failed", error, 400, false);
+  }
+};
+const getAllScheduleClass = async (req, res) => {
+  const { query, baseUrl, path, hostname, protocol } = req;
+  const { search, sort, filter, dateSub } = req.query;
+  const qsValue = [...searchValue(search, filter), dateSub, ...sortBy(sort)];
+  try {
+    const finalResult = await classModel.getAllScheduleClass(
+      qsValue,
+      req.query
+    );
+    const { result, count, page, limit } = finalResult;
+    const totalPage = Math.ceil(count / limit);
+    const url =
+      protocol + "://" + hostname + ":" + process.env.PORT + baseUrl + path;
+    const prev =
+      page === 1
+        ? null
+        : url +
+          `?${search ? `&search=${search}` : ""}${sort ? `&sort=${sort}` : ""}${
+            filter ? `&filter=${filter}` : ""
+          }&page=${page - 1}&limit=${query.limit || 3}`;
+    const next =
+      page === totalPage
+        ? null
+        : url +
+          `?${search ? `&search=${search}` : ""}${sort ? `&sort=${sort}` : ""}${
+            filter ? `&filter=${filter}` : ""
+          }&page=${page + 1}&limit=${query.limit || 3}`;
+    const info = {
+      count,
+      page,
+      totalPage,
+      next,
+      prev,
+    };
+    response(res, null, { ...[result], ...info }, 200, true);
+  } catch (error) {
+    console.log(error);
+    response(res, "Failed", error, 400, false);
+  }
+};
+const getForYouClass = async (req, res) => {
+  const { query, baseUrl, path, hostname, protocol } = req;
+  const { search, sort, filter, dateSub } = req.query;
+  const qsValue = [
+    ...searchValue(search, filter),
+    req.user._id,
+    dateSub,
+    ...sortBy(sort),
+  ];
+  try {
+    const finalResult = await classModel.getForYouClass(qsValue, req.query);
+    const { result, count, page, limit } = finalResult;
+    const totalPage = Math.ceil(count / limit);
+    const url =
+      protocol + "://" + hostname + ":" + process.env.PORT + baseUrl + path;
+    const prev =
+      page === 1
+        ? null
+        : url +
+          `?${search ? `&search=${search}` : ""}${sort ? `&sort=${sort}` : ""}${
+            filter ? `&filter=${filter}` : ""
+          }&page=${page - 1}&limit=${query.limit || 3}`;
+    const next =
+      page === totalPage
+        ? null
+        : url +
+          `?${search ? `&search=${search}` : ""}${sort ? `&sort=${sort}` : ""}${
+            filter ? `&filter=${filter}` : ""
+          }&page=${page + 1}&limit=${query.limit || 3}`;
+    const info = {
+      count,
+      page,
+      totalPage,
+      next,
+      prev,
+    };
+    response(res, null, { ...[result], ...info }, 200, true);
+  } catch (error) {
+    console.log(error);
     response(res, "Failed", error, 400, false);
   }
 };
@@ -384,6 +511,9 @@ const updateScore = async (req, res) => {
   }
 };
 module.exports = {
+  getAllScheduleClass,
+  getScheduleFacilitator,
+  getForYouClass,
   getAllClass,
   getAllClassAndStudent,
   getMyClass,
