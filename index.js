@@ -8,7 +8,11 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, {
   cors: {
-    origin: ["http://localhost:8000"],
+    origin: [
+      "http://localhost:8000",
+      "http://localhost:3000",
+      "http://192.168.100.102",
+    ],
     methods: ["GET", "POST", "PATCH", "DELETE"],
     allowedHeaders: ["auth-token"],
   },
@@ -16,7 +20,7 @@ const io = socketIO(server, {
 io.on("connection", (socket) => {
   console.log(`${socket.id} has joined`);
   socket.on("send-message", (body, room, cb) => {
-    console.log(`incoming from ${socket.id}`);
+    console.log(`incoming from ${socket.id}---${body.idSender}||${room}`);
     cb({ status: true });
 
     if (room) {
