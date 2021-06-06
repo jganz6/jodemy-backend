@@ -12,6 +12,7 @@ const io = socketIO(server, {
       "http://localhost:8000",
       "http://localhost:3000",
       "http://192.168.100.102",
+      "http://192.168.100.11",
     ],
     methods: ["GET", "POST", "PATCH", "DELETE"],
     allowedHeaders: ["auth-token"],
