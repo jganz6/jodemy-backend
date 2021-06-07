@@ -21,7 +21,7 @@ const power = (byte, n) => {
 };
 
 const limits = {
-  fileSize: 2 * power(bytes, 2), // 5 Mb
+  fileSize: 10 * power(bytes, 2), // 5 Mb
 };
 
 const fileFilter = (req, file, cb) => {

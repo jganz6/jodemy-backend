@@ -155,7 +155,7 @@ const getAllScheduleClass = (qsValue, query) => {
           // escaped character (\) => sehingga tanda yang digunakan sebagai syntax muncul sebagai string
           dbMySql.query(qsCount, qsValue, (err, data) => {
             if (err) return reject(err);
-            const { count } = data[0];
+            const { count } = data;
             let finalResult = {
               result,
               count,
@@ -172,7 +172,7 @@ const getAllScheduleClass = (qsValue, query) => {
 const getForYouClass = (qsValue, query) => {
   return new Promise((resolve, reject) => {
     //SELECT DISTINCT(score_subject_report.id_class),AVG(score_subject_report.score) AS SCORE FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on class.id_class = class_subject.id_class where score_subject_report.id_account = 1 GROUP BY id_class
-    const qs = `SELECT DISTINCT(score_subject_report.id_class),AVG(score_subject_report.score) as score, (count(score_subject_report.score)/count(score_subject_report.id_subject)*100) as progress, class.class_name, class.category,class.description,class.pricing,class.level FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on score_subject_report.id_subject = class_subject.id_subject where class.class_name like ? ? ?and score_subject_report.id_account = ? and class_subject.subject_date = ? GROUP BY score_subject_report.id_class ORDER by ? ?`;
+    const qs = `SELECT DISTINCT(score_subject_report.id_class),AVG(score_subject_report.score) as score, (count(score_subject_report.score)/count(score_subject_report.id_subject)*100) as progress, class.* FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on score_subject_report.id_subject = class_subject.id_subject where class.class_name like ? ? ?and score_subject_report.id_account = ? and class_subject.subject_date = ? GROUP BY score_subject_report.id_class ORDER by ? ?`;
     // const qs = `SELECT class.*, AVG(score_subject_report.score) AS SCORE FROM score_subject_report INNER JOIN class on class.id_class=score_subject_report.id_class WHERE class.class_name LIKE ? and score_subject_report.id_class in(SELECT DISTINCT(score_subject_report.id_class) FROM score_subject_report INNER JOIN class on score_subject_report.id_class = class.id_class INNER JOIN class_subject on class.id_class = class_subject.id_class where score_subject_report.id_account = ? GROUP BY id_class) GROUP BY class.id_class ORDER by ? ?`;
     const paginate = "LIMIT ? OFFSET ?";
     const qsWithPaginate = qs.concat(" ", paginate);
