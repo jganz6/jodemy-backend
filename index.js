@@ -20,6 +20,12 @@ const io = socketIO(server, {
 });
 io.on("connection", (socket) => {
   console.log(`${socket.id} has joined`);
+  socket.on("register-class", (body, room) => {
+    console.log(`${body.username} register ${body.class_name} class`);
+    if (room) {
+      socket.to(room).emit("class-registered", body);
+    }
+  });
   socket.on("send-message", (body, room, cb) => {
     console.log(`incoming from ${socket.id}---${body.idSender}||${room}`);
     cb({ status: true });
