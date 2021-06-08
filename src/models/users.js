@@ -19,7 +19,7 @@ const updateAccount = (qsValue, id) => {
         reject(err);
       } else {
         const qsUpdated =
-          "SELECT username,phone_number,role,photo_profile from tb_account WHERE id_account = ?";
+          "SELECT id_account,username,phone_number,role,photo_profile from tb_account WHERE id_account = ?";
         dbMySql.query(qsUpdated, qsValue, (err, data) => {
           if (err) {
             reject(err);
