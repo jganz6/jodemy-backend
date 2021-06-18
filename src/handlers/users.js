@@ -22,7 +22,7 @@ const updateAccount = async (req, res) => {
     }
     console.log(updateValue);
     const result = await usersModel.updateAccount(updateValue, req.user._id);
-    response(res, null, { result }, 200, true);
+    response(res, null, ...result, 200, true);
   } catch (err) {
     response(res, "Error", err, 400, false);
   }
