@@ -20,7 +20,7 @@ const updateAccount = (qsValue, id) => {
       } else {
         const qsUpdated =
           "SELECT id_account,username,phone_number,role,photo_profile from tb_account WHERE id_account = ?";
-        dbMySql.query(qsUpdated, [qsValue, id], (err, data) => {
+        dbMySql.query(qsUpdated, id, (err, data) => {
           if (err) {
             reject(err);
           } else {
